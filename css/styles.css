@@ -1,0 +1,44 @@
+header {
+  color: white;
+  background-color: #017bfe;
+}
+
+.header-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: no-wrap;
+  padding-left: 1rem;
+}
+
+.favorites {
+  margin-top: 1.4rem;
+  margin-left: 2.25rem;
+}
+
+.best-in-the-west {
+  font-size: 1.6rem;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.main-text-container {
+  text-align: center;
+  justify-content: center;
+}
+
+.listed-images-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+li {
+  width: 50%;
+}
+
+img {
+  width: 100%;
+}
