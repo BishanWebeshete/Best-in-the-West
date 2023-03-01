@@ -3,6 +3,10 @@ header {
   background-color: #017bfe;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .header-container {
   display: flex;
   justify-content: flex-start;
@@ -13,6 +17,13 @@ header {
 .favorites {
   margin-top: 1.4rem;
   margin-left: 2.25rem;
+}
+
+.rankings {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 1.3rem;
 }
 
 .best-in-the-west {
@@ -55,6 +66,20 @@ ol {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+thead {
+  background-color: #5585b5;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
 }
 
 @media screen and (min-width: 768px) {
