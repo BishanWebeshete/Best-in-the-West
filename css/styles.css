@@ -3,6 +3,10 @@ header {
   background-color: #017bfe;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .header-container {
   display: flex;
   justify-content: flex-start;
@@ -13,6 +17,15 @@ header {
 .favorites {
   margin-top: 1.4rem;
   margin-left: 2.25rem;
+}
+
+.rankings {
+  /* margin-top: 1.4rem;
+  margin-left: 1.3rem; */
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 1.3rem;
 }
 
 .best-in-the-west {

@@ -1,4 +1,6 @@
 var $ol = document.querySelector('ol');
+var $rankingsContainer = document.querySelector('.rankings-container');
+var $tableContentContainer = document.querySelector('.table-content-container');
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
@@ -45,6 +47,8 @@ $imagesContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'IMG') {
     return;
   }
+  $rankingsContainer.classList.add('hidden');
+  $tableContentContainer.classList.remove('hidden');
   var teamID = event.target.id;
   var xhr1 = new XMLHttpRequest();
   xhr1.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
@@ -73,4 +77,10 @@ $imagesContainer.addEventListener('click', function (event) {
 
   });
   xhr1.send();
+});
+
+var $rankingsTab = document.querySelector('.rankings');
+$rankingsTab.addEventListener('click', function (event) {
+  $tableContentContainer.classList.add('hidden');
+  $rankingsContainer.classList.remove('hidden');
 });
