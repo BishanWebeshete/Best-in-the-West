@@ -57,6 +57,11 @@ ol {
   margin: 0;
 }
 
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
 @media screen and (min-width: 768px) {
   li {
     margin: 1rem;

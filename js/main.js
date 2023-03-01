@@ -3,6 +3,7 @@ var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
 xhr.responseType = 'json';
 xhr.addEventListener('load', function () {
+  // console.log(xhr.response);
   for (let i = 0; i < xhr.response.records[3].teamRecords.length; i++) {
     var $li = document.createElement('li');
     var $img = document.createElement('img');
@@ -28,3 +29,27 @@ xhr.addEventListener('load', function () {
   }
 });
 xhr.send();
+
+var xhr1 = new XMLHttpRequest();
+xhr1.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/54/roster?season=20222023');
+xhr1.responseType = 'json';
+xhr1.addEventListener('load', function () {
+  // console.log(xhr1.status);
+  // console.log(xhr1.response);
+  // console.log(xhr1.response.roster[0].person.fullName);
+  var $tbody = document.querySelector('tbody');
+  for (let i = 0; i < xhr1.response.roster.length; i++) {
+    var $tr = document.createElement('tr');
+    var $th1 = document.createElement('th');
+    $th1.textContent = xhr1.response.roster[i].jerseyNumber;
+    var $th2 = document.createElement('th');
+    $th2.textContent = xhr1.response.roster[i].person.fullName;
+    var $th3 = document.createElement('th');
+    $th3.textContent = xhr1.response.roster[i].position.abbreviation;
+    $tr.appendChild($th1);
+    $tr.appendChild($th2);
+    $tr.appendChild($th3);
+    $tbody.appendChild($tr);
+  }
+});
+xhr1.send();
