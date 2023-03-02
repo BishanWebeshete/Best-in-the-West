@@ -54,6 +54,8 @@ $imagesContainer.addEventListener('click', function (event) {
   xhr1.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
   xhr1.responseType = 'json';
   xhr1.addEventListener('load', function () {
+    // console.log(xhr1.response);
+    // console.log(xhr1.response.roster[0].person.id);
     var $oldTableBody = document.querySelector('tbody');
     if ($oldTableBody) {
       $oldTableBody.remove();

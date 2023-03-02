@@ -59,6 +59,20 @@ img {
   width: 100%;
 }
 
+.image-container {
+  max-width: 200px;
+}
+
+.player-profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.player-profile-info {
+  text-align: center;
+}
+
 ol {
   display: flex;
   flex-wrap: wrap;
@@ -95,5 +109,18 @@ tr:nth-child(even) {
 
   ol {
     list-style: none;
+  }
+
+  .player-profile-name {
+    flex-basis: calc(100% / 1);
+    text-align: center;
+  }
+
+  .player-profile-info {
+    flex-basis: calc(100% / 1);
+  }
+
+  .image-container {
+    flex-basis: calc(100% / 1);
   }
 }
