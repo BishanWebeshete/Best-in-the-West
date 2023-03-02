@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
   <header>
@@ -21,7 +22,7 @@
     <div class="rankings-container">
       <div class="main-text-container">
         <h1>Pacific Rankings</h1>
-        <h3>pick a team...</h3>
+        <h3>pick a team..</h3>
       </div>
       <div class="listed-images-container">
         <ol>
@@ -34,7 +35,7 @@
         <h3>view a player...</h3>
       </div>
       <div class="table-container">
-        <table>
+        <table id="table">
           <thead>
             <tr>
               <th>Number</th>
@@ -43,6 +44,28 @@
             </tr>
           </thead>
         </table>
+      </div>
+    </div>
+    <div class="hidden player-profile-container">
+      <div class="player-profile-name">
+        <h1 class="name">Player Name</h1>
+      </div>
+      <div class="image-container">
+        <img class="player-image" src="https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png" alt="ducks logo">
+      </div>
+      <div class="player-profile-info">
+        <div>
+          <span class="position">Position</span> | <span class="height">Height</span> | <span class="weight">Weight</span> | <span class="age">Age</span>
+        </div>
+        <div>
+          <span class="gp">GP</span> | <span class="goals">Goals</span> | <span class="assists">Assists</span>
+        </div>
+        <div>
+          <span class="birth-date">Birth-Date</span> | <span class="birth-place">Birth-Place</span>
+        </div>
+        <div>
+          <span>Add To Favorites</span> <i class="fa-solid fa-circle-plus"></i>
+        </div>
       </div>
     </div>
   </main>
