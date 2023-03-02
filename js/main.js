@@ -117,6 +117,8 @@ $table.addEventListener('click', function (event) {
     } else if (currentTeam === 'Anaheim Ducks') {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png');
     }
+    var $plusSign = document.querySelector('.plus-sign');
+    $plusSign.setAttribute('id', xhr2.response.people[0].id);
     var $name = document.querySelector('.name');
     $name.textContent = xhr2.response.people[0].fullName;
     var $position = document.querySelector('.position');
