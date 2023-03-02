@@ -106,13 +106,28 @@ $table.addEventListener('click', function (event) {
     var $height = document.querySelector('.height');
     $height.textContent = xhr2.response.people[0].height;
     var $weight = document.querySelector('.weight');
-    $weight.textContent = xhr2.response.people[0].weight;
+    $weight.textContent = xhr2.response.people[0].weight + ' ' + 'lbs';
     var $age = document.querySelector('.age');
-    $age.textContent = xhr2.response.people[0].currentAge;
+    $age.textContent = xhr2.response.people[0].currentAge + ' ' + 'yrs';
     var $birthDay = document.querySelector('.birth-date');
     $birthDay.textContent = xhr2.response.people[0].birthDate;
     var $birthPlace = document.querySelector('.birth-place');
-    $birthPlace.textContent = xhr2.response.people[0].birthCity + ',' + xhr2.response.people[0].birthCountry;
+    $birthPlace.textContent = xhr2.response.people[0].birthCity + ',' + ' ' + xhr2.response.people[0].birthCountry;
   });
   xhr2.send();
+
+  var xhr3 = new XMLHttpRequest();
+  xhr3.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=homeAndAway&season=20222023');
+  xhr3.responseType = 'json';
+  xhr3.addEventListener('load', function () {
+    // console.log(xhr3.status);
+    // console.log(xhr3.response);
+    var $gamesPlayed = document.querySelector('.gp');
+    $gamesPlayed.textContent = xhr3.response.stats[0].splits[0].stat.games + xhr3.response.stats[0].splits[1].stat.games + ' ' + 'gp';
+    var $goals = document.querySelector('.goals');
+    $goals.textContent = xhr3.response.stats[0].splits[0].stat.goals + xhr3.response.stats[0].splits[1].stat.goals + ' ' + 'G';
+    var $assists = document.querySelector('.assists');
+    $assists.textContent = xhr3.response.stats[0].splits[0].stat.assists + xhr3.response.stats[0].splits[1].stat.assists + ' ' + 'A';
+  });
+  xhr3.send();
 });
