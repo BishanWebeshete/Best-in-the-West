@@ -64,9 +64,11 @@ $imagesContainer.addEventListener('click', function (event) {
     for (let i = 0; i < xhr1.response.roster.length; i++) {
       var $table = document.querySelector('table');
       var $tr = document.createElement('tr');
+      $tr.setAttribute('id', xhr1.response.roster[i].person.id);
       var $td1 = document.createElement('td');
       $td1.textContent = xhr1.response.roster[i].jerseyNumber;
       var $td2 = document.createElement('td');
+      // $td2.setAttribute('id', xhr1.response.roster[i].person.id);
       $td2.textContent = xhr1.response.roster[i].person.fullName;
       var $td3 = document.createElement('td');
       $td3.textContent = xhr1.response.roster[i].position.abbreviation;
@@ -85,4 +87,32 @@ var $rankingsTab = document.querySelector('.rankings');
 $rankingsTab.addEventListener('click', function (event) {
   $tableContentContainer.classList.add('hidden');
   $rankingsContainer.classList.remove('hidden');
+});
+
+var $table = document.querySelector('#table');
+$table.addEventListener('click', function (event) {
+  if (event.target.tagName !== 'TD') {
+    return;
+  }
+  var $trId = event.target.closest('tr').id;
+  var xhr2 = new XMLHttpRequest();
+  xhr2.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId);
+  xhr2.responseType = 'json';
+  xhr2.addEventListener('load', function () {
+    var $name = document.querySelector('.name');
+    $name.textContent = xhr2.response.people[0].fullName;
+    var $position = document.querySelector('.position');
+    $position.textContent = xhr2.response.people[0].primaryPosition.abbreviation;
+    var $height = document.querySelector('.height');
+    $height.textContent = xhr2.response.people[0].height;
+    var $weight = document.querySelector('.weight');
+    $weight.textContent = xhr2.response.people[0].weight;
+    var $age = document.querySelector('.age');
+    $age.textContent = xhr2.response.people[0].currentAge;
+    var $birthDay = document.querySelector('.birth-date');
+    $birthDay.textContent = xhr2.response.people[0].birthDate;
+    var $birthPlace = document.querySelector('.birth-place');
+    $birthPlace.textContent = xhr2.response.people[0].birthCity + ',' + xhr2.response.people[0].birthCountry;
+  });
+  xhr2.send();
 });
