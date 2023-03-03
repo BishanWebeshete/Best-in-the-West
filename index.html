@@ -14,7 +14,7 @@
   <header>
     <div class="header-container">
       <h1 class="best-in-the-west">Best in The West</h1>
-      <a class="favorites" href="">Favorites</a>
+      <button class="favorites">Favorites</button>
       <button class="rankings">Rankings</button>
     </div>
   </header>
@@ -63,9 +63,25 @@
         <div>
           <span class="birth-date">Birth-Date</span> | <span class="birth-place">Birth-Place</span>
         </div>
-        <div>
+        <div class="plus-sign-container">
           <span>Add To Favorites</span> <i class="plus-sign fa-solid fa-circle-plus"></i>
         </div>
+      </div>
+    </div>
+    <div class="hidden favorite-players-content-container">
+      <div class="favorite-players-main-text-container">
+        <h1>Favorite Players</h1>
+      </div>
+      <div class="favorite-players-table-container">
+        <table id="favorite-players-table">
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Name</th>
+              <th>Position</th>
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
   </main>

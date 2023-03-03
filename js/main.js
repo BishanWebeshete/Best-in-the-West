@@ -2,6 +2,10 @@ var $ol = document.querySelector('ol');
 var $rankingsContainer = document.querySelector('.rankings-container');
 var $tableContentContainer = document.querySelector('.table-content-container');
 var $playerProfileContainer = document.querySelector('.player-profile-container');
+var $plusSign = document.querySelector('.plus-sign');
+var $plusSignContainer = document.querySelector('.plus-sign-container');
+var $favoritePlayersContainer = document.querySelector('.favorite-players-content-container');
+var $favoritesButton = document.querySelector('.favorites');
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
@@ -48,6 +52,7 @@ $imagesContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'IMG') {
     return;
   }
+  $favoritePlayersContainer.classList.add('hidden');
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.remove('hidden');
   var teamID = event.target.id;
@@ -117,7 +122,6 @@ $table.addEventListener('click', function (event) {
     } else if (currentTeam === 'Anaheim Ducks') {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png');
     }
-    var $plusSign = document.querySelector('.plus-sign');
     $plusSign.setAttribute('id', xhr2.response.people[0].id);
     var $name = document.querySelector('.name');
     $name.textContent = xhr2.response.people[0].fullName;
@@ -148,4 +152,39 @@ $table.addEventListener('click', function (event) {
     $assists.textContent = xhr3.response.stats[0].splits[0].stat.assists + xhr3.response.stats[0].splits[1].stat.assists + ' ' + 'A';
   });
   xhr3.send();
+});
+
+$plusSignContainer.addEventListener('click', function (event) {
+  if (event.target.tagName !== 'I') {
+    return;
+  }
+  $favoritePlayersContainer.classList.remove('hidden');
+  $playerProfileContainer.classList.add('hidden');
+  var $iconId = event.target.closest('i').id;
+  var xhr4 = new XMLHttpRequest();
+  xhr4.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
+  xhr4.responseType = 'json';
+  xhr4.addEventListener('load', function () {
+    var $favoritesTable = document.querySelector('#favorite-players-table');
+    var $favoriteTbody = document.createElement('tbody');
+    var $favoriteTr = document.createElement('tr');
+    var $favoriteTd1 = document.createElement('td');
+    $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
+    var $favoriteTd2 = document.createElement('td');
+    $favoriteTd2.textContent = xhr4.response.people[0].fullName;
+    var $favoriteTd3 = document.createElement('td');
+    $favoriteTd3.textContent = xhr4.response.people[0].primaryPosition.abbreviation;
+    $favoritesTable.appendChild($favoriteTbody);
+    $favoriteTbody.appendChild($favoriteTr);
+    $favoriteTr.appendChild($favoriteTd1);
+    $favoriteTr.appendChild($favoriteTd2);
+    $favoriteTr.appendChild($favoriteTd3);
+  });
+  xhr4.send();
+});
+
+$favoritesButton.addEventListener('click', function (event) {
+  $favoritePlayersContainer.classList.remove('hidden');
+  $rankingsContainer.classList.add('hidden');
+  $tableContentContainer.classList.add('hidden');
 });
