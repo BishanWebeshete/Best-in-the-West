@@ -174,11 +174,16 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTd2.textContent = xhr4.response.people[0].fullName;
     var $favoriteTd3 = document.createElement('td');
     $favoriteTd3.textContent = xhr4.response.people[0].primaryPosition.abbreviation;
+    var $favoriteTd4 = document.createElement('td');
+    var $trashIcon = document.createElement('i');
+    $trashIcon.className = 'fa-solid fa-trash';
     $favoritesTable.appendChild($favoriteTbody);
     $favoriteTbody.appendChild($favoriteTr);
     $favoriteTr.appendChild($favoriteTd1);
     $favoriteTr.appendChild($favoriteTd2);
     $favoriteTr.appendChild($favoriteTd3);
+    $favoriteTd4.appendChild($trashIcon);
+    $favoriteTr.appendChild($favoriteTd4);
   });
   xhr4.send();
 });
