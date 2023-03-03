@@ -91,6 +91,7 @@ $rankingsTab.addEventListener('click', function (event) {
   $tableContentContainer.classList.add('hidden');
   $rankingsContainer.classList.remove('hidden');
   $playerProfileContainer.classList.add('hidden');
+  $favoritePlayersContainer.classList.add('hidden');
 });
 
 var $table = document.querySelector('#table');
@@ -184,6 +185,24 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTr.appendChild($favoriteTd3);
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
+
+    $favoriteTr.addEventListener('click', function (event) {
+      if (event.target.tagName !== 'I') {
+        return;
+      }
+      var closestTr = event.target.closest('tr');
+      var $modal = document.querySelector('.modal-container');
+      var $yesButton = document.querySelector('.yes-button');
+      var $noButton = document.querySelector('.no-button');
+      $modal.classList.remove('hidden');
+      $noButton.addEventListener('click', function (even) {
+        $modal.classList.add('hidden');
+      });
+      $yesButton.addEventListener('click', function (event) {
+        $favoriteTbody.removeChild(closestTr);
+        $modal.classList.add('hidden');
+      });
+    });
   });
   xhr4.send();
 });
