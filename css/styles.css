@@ -128,11 +128,40 @@ tr:nth-child(even) {
 .modal-content {
   background-color: white;
   border-radius: 0.5rem;
-  padding: 1rem 0.5rem;
+  padding: 1rem 2rem;
+  text-align: center;
 }
 
 .modal-buttons {
   text-align: center;
+}
+
+.yes-button {
+  border-color: #e24360;
+  background-color: white;
+  padding: 0.5rem;
+  margin: 1rem;
+  border-radius: 1rem;
+}
+
+.no-button {
+  background-color: white;
+  padding: 0.5rem;
+  margin: 1rem;
+  border-radius: 1rem;
+}
+
+td {
+  text-align: center;
+  padding: 0.25rem;
+}
+
+tr:hover {
+  cursor: pointer;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 @media screen and (min-width: 768px) {
@@ -161,5 +190,9 @@ tr:nth-child(even) {
 
   .image-container {
     flex-basis: calc(100% / 1);
+  }
+
+  td {
+    padding: 0.5rem 1.5rem;
   }
 }

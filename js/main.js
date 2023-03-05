@@ -84,6 +84,23 @@ $imagesContainer.addEventListener('click', function (event) {
 
   });
   xhr1.send();
+
+  var xhr5 = new XMLHttpRequest();
+  xhr5.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/stats');
+  xhr5.responseType = 'json';
+  xhr5.addEventListener('load', function (event) {
+    var $rosterName = document.querySelector('.official-roster');
+    $rosterName.textContent = xhr5.response.stats[0].splits[0].team.name + ' ' + 'Official' + ' ' + 'Roster';
+    var $wins = document.querySelector('.wins');
+    $wins.textContent = xhr5.response.stats[0].splits[0].stat.wins;
+    var $losses = document.querySelector('.losses');
+    $losses.textContent = xhr5.response.stats[0].splits[0].stat.losses;
+    var $overTimeLosses = document.querySelector('.otl');
+    $overTimeLosses.textContent = xhr5.response.stats[0].splits[0].stat.ot;
+    var $points = document.querySelector('.points');
+    $points.textContent = xhr5.response.stats[0].splits[0].stat.pts;
+  });
+  xhr5.send();
 });
 
 var $rankingsTab = document.querySelector('.rankings');
@@ -199,7 +216,7 @@ $plusSignContainer.addEventListener('click', function (event) {
         $modal.classList.add('hidden');
       });
       $yesButton.addEventListener('click', function (event) {
-        $favoriteTbody.removeChild(closestTr);
+        $favoriteTbody.remove(closestTr);
         $modal.classList.add('hidden');
       });
     });
@@ -211,4 +228,13 @@ $favoritesButton.addEventListener('click', function (event) {
   $favoritePlayersContainer.classList.remove('hidden');
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.add('hidden');
+  $playerProfileContainer.classList.add('hidden');
 });
+
+// var xhr5 = new XMLHttpRequest();
+// xhr5.open('GET', 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore&teamId=28&startDate=2023-1-11&endDate=2023-3-4');
+// xhr5.responseType = 'json';
+// xhr5.addEventListener('load', function (event) {
+//   console.log(xhr5.response);
+// });
+// xhr5.send();
