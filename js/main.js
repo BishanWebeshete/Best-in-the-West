@@ -178,12 +178,13 @@ $table.addEventListener('click', function (event) {
   xhr6.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
   xhr6.responseType = 'json';
   xhr6.addEventListener('load', function (event) {
-    var $oldTableBody = document.querySelector('tbody');
+    var $oldTableBody = document.querySelector('.advancedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
     var $advancedStatsTable = document.querySelector('.advanced-stats-table');
     var $advancedStatsTbody = document.createElement('tbody');
+    $advancedStatsTbody.setAttribute('class', 'advancedStatsTbody');
     for (let i = 0; i < xhr6.response.stats[0].splits.length; i++) {
       var $advancedStatsTr = document.createElement('tr');
       var $advancedStatsTh = document.createElement('th');
@@ -222,6 +223,10 @@ $plusSignContainer.addEventListener('click', function (event) {
   var xhr4 = new XMLHttpRequest();
   xhr4.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
   xhr4.responseType = 'json';
+  // var $oldTableBody = document.querySelector('tbody');
+  // if ($oldTableBody) {
+  //   $oldTableBody.remove();
+  // }
   xhr4.addEventListener('load', function () {
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTbody = document.createElement('tbody');
@@ -269,4 +274,5 @@ $favoritesButton.addEventListener('click', function (event) {
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.add('hidden');
   $playerProfileContainer.classList.add('hidden');
+  $advancedStatsContainer.classList.add('hidden');
 });
