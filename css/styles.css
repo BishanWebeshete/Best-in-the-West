@@ -164,6 +164,16 @@ button:hover {
   cursor: pointer;
 }
 
+.advanced-stats-text {
+  text-align: center;
+}
+
+.advanced-stats-table-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media screen and (min-width: 768px) {
   li {
     margin: 1rem;

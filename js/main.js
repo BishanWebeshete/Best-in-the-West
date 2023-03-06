@@ -6,6 +6,7 @@ var $plusSign = document.querySelector('.plus-sign');
 var $plusSignContainer = document.querySelector('.plus-sign-container');
 var $favoritePlayersContainer = document.querySelector('.favorite-players-content-container');
 var $favoritesButton = document.querySelector('.favorites');
+var $advancedStatsContainer = document.querySelector('.advanced-stats-container');
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
@@ -66,7 +67,7 @@ $imagesContainer.addEventListener('click', function (event) {
     }
     var $tbody = document.createElement('tbody');
     for (let i = 0; i < xhr1.response.roster.length; i++) {
-      var $table = document.querySelector('table');
+      var $table = document.querySelector('#table');
       var $tr = document.createElement('tr');
       $tr.setAttribute('id', xhr1.response.roster[i].person.id);
       var $td1 = document.createElement('td');
@@ -109,6 +110,7 @@ $rankingsTab.addEventListener('click', function (event) {
   $rankingsContainer.classList.remove('hidden');
   $playerProfileContainer.classList.add('hidden');
   $favoritePlayersContainer.classList.add('hidden');
+  $advancedStatsContainer.classList.add('hidden');
 });
 
 var $table = document.querySelector('#table');
@@ -116,6 +118,7 @@ $table.addEventListener('click', function (event) {
   if (event.target.tagName !== 'TD') {
     return;
   }
+  $advancedStatsContainer.classList.remove('hidden');
   $playerProfileContainer.classList.remove('hidden');
   $tableContentContainer.classList.add('hidden');
   var $trId = event.target.closest('tr').id;
@@ -170,12 +173,49 @@ $table.addEventListener('click', function (event) {
     $assists.textContent = xhr3.response.stats[0].splits[0].stat.assists + xhr3.response.stats[0].splits[1].stat.assists + ' ' + 'A';
   });
   xhr3.send();
+
+  var xhr6 = new XMLHttpRequest();
+  xhr6.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
+  xhr6.responseType = 'json';
+  xhr6.addEventListener('load', function (event) {
+    var $oldTableBody = document.querySelector('tbody');
+    if ($oldTableBody) {
+      $oldTableBody.remove();
+    }
+    var $advancedStatsTable = document.querySelector('.advanced-stats-table');
+    var $advancedStatsTbody = document.createElement('tbody');
+    for (let i = 0; i < xhr6.response.stats[0].splits.length; i++) {
+      var $advancedStatsTr = document.createElement('tr');
+      var $advancedStatsTh = document.createElement('th');
+      $advancedStatsTh.textContent = xhr6.response.stats[0].splits[i].month;
+      var $advancedStatsTd = document.createElement('td');
+      $advancedStatsTd.textContent = xhr6.response.stats[0].splits[i].stat.shortHandedGoals;
+      var $advancedStatsTd1 = document.createElement('td');
+      $advancedStatsTd1.textContent = xhr6.response.stats[0].splits[i].stat.powerPlayGoals;
+      var $advancedStatsTd2 = document.createElement('td');
+      $advancedStatsTd2.textContent = xhr6.response.stats[0].splits[i].stat.pim;
+      var $advancedStatsTd3 = document.createElement('td');
+      $advancedStatsTd3.textContent = xhr6.response.stats[0].splits[i].stat.shots;
+      var $advancedStatsTd4 = document.createElement('td');
+      $advancedStatsTd4.textContent = xhr6.response.stats[0].splits[i].stat.timeOnIcePerGame;
+      $advancedStatsTr.appendChild($advancedStatsTh);
+      $advancedStatsTr.appendChild($advancedStatsTd1);
+      $advancedStatsTr.appendChild($advancedStatsTd);
+      $advancedStatsTr.appendChild($advancedStatsTd2);
+      $advancedStatsTr.appendChild($advancedStatsTd3);
+      $advancedStatsTr.appendChild($advancedStatsTd4);
+      $advancedStatsTbody.appendChild($advancedStatsTr);
+      $advancedStatsTable.appendChild($advancedStatsTbody);
+    }
+  });
+  xhr6.send();
 });
 
 $plusSignContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'I') {
     return;
   }
+  $advancedStatsContainer.classList.add('hidden');
   $favoritePlayersContainer.classList.remove('hidden');
   $playerProfileContainer.classList.add('hidden');
   var $iconId = event.target.closest('i').id;
@@ -230,11 +270,3 @@ $favoritesButton.addEventListener('click', function (event) {
   $tableContentContainer.classList.add('hidden');
   $playerProfileContainer.classList.add('hidden');
 });
-
-// var xhr5 = new XMLHttpRequest();
-// xhr5.open('GET', 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore&teamId=28&startDate=2023-1-11&endDate=2023-3-4');
-// xhr5.responseType = 'json';
-// xhr5.addEventListener('load', function (event) {
-//   console.log(xhr5.response);
-// });
-// xhr5.send();
