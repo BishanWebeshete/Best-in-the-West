@@ -223,10 +223,6 @@ $plusSignContainer.addEventListener('click', function (event) {
   var xhr4 = new XMLHttpRequest();
   xhr4.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
   xhr4.responseType = 'json';
-  // var $oldTableBody = document.querySelector('tbody');
-  // if ($oldTableBody) {
-  //   $oldTableBody.remove();
-  // }
   xhr4.addEventListener('load', function () {
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTbody = document.createElement('tbody');
