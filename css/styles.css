@@ -166,11 +166,6 @@ td {
   border-radius: 1rem;
 }
 
-/* td {
-  text-align: center;
-  padding: 0.25rem;
-} */
-
 tr:hover {
   cursor: pointer;
 }

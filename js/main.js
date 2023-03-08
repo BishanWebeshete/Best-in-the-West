@@ -228,8 +228,6 @@ $plusSignContainer.addEventListener('click', function (event) {
   xhr4.responseType = 'json';
   xhr4.addEventListener('load', function () {
     var $favoritesTable = document.querySelector('#favorite-players-table');
-    // var $favoriteTbody = document.createElement('tbody');
-    // var $favoriteTbody = document.getElementById('favorite-tbody');
     var $favoriteTr = document.createElement('tr');
     var $favoriteTd1 = document.createElement('td');
     $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
