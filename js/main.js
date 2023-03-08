@@ -142,6 +142,8 @@ $table.addEventListener('click', function (event) {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/3/37/SanJoseSharksLogo.svg/1200px-SanJoseSharksLogo.svg.png');
     } else if (currentTeam === 'Anaheim Ducks') {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png');
+    } else if (currentTeam === 'Calgary Flames') {
+      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Calgary_Flames_logo.svg/1200px-Calgary_Flames_logo.svg.png');
     }
     $plusSign.setAttribute('id', xhr2.response.people[0].id);
     var $name = document.querySelector('.name');
@@ -212,6 +214,7 @@ $table.addEventListener('click', function (event) {
   xhr6.send();
 });
 
+var $favoriteTbody = document.getElementById('favorite-tbody');
 $plusSignContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'I') {
     return;
@@ -225,7 +228,8 @@ $plusSignContainer.addEventListener('click', function (event) {
   xhr4.responseType = 'json';
   xhr4.addEventListener('load', function () {
     var $favoritesTable = document.querySelector('#favorite-players-table');
-    var $favoriteTbody = document.createElement('tbody');
+    // var $favoriteTbody = document.createElement('tbody');
+    // var $favoriteTbody = document.getElementById('favorite-tbody');
     var $favoriteTr = document.createElement('tr');
     var $favoriteTd1 = document.createElement('td');
     $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
@@ -243,26 +247,28 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTr.appendChild($favoriteTd3);
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
-
-    $favoriteTr.addEventListener('click', function (event) {
-      if (event.target.tagName !== 'I') {
-        return;
-      }
-      var closestTr = event.target.closest('tr');
-      var $modal = document.querySelector('.modal-container');
-      var $yesButton = document.querySelector('.yes-button');
-      var $noButton = document.querySelector('.no-button');
-      $modal.classList.remove('hidden');
-      $noButton.addEventListener('click', function (even) {
-        $modal.classList.add('hidden');
-      });
-      $yesButton.addEventListener('click', function (event) {
-        $favoriteTbody.remove(closestTr);
-        $modal.classList.add('hidden');
-      });
-    });
   });
   xhr4.send();
+});
+
+var closestTr = null;
+var $modal = document.querySelector('.modal-container');
+var $yesButton = document.querySelector('.yes-button');
+var $noButton = document.querySelector('.no-button');
+$favoriteTbody.addEventListener('click', function (event) {
+  if (event.target.tagName !== 'I') {
+    return;
+  }
+  closestTr = event.target.closest('tr');
+  $modal.classList.remove('hidden');
+});
+
+$noButton.addEventListener('click', function (even) {
+  $modal.classList.add('hidden');
+});
+$yesButton.addEventListener('click', function (event) {
+  closestTr.remove();
+  $modal.classList.add('hidden');
 });
 
 $favoritesButton.addEventListener('click', function (event) {

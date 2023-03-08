@@ -34,12 +34,12 @@
         <h1 class="official-roster">Official Roster</h1>
         <h2>Record: <span class="wins">21</span> - <span class="losses">14</span> - <span class="otl">3</span></h2>
         <h3>Points: <span class="points">47pts</span></h3>
-        <h3>view a player..</h3>
+        <h3>view a player...</h3>
       </div>
       <div class="table-container">
         <table id="table">
           <thead>
-            <tr>
+            <tr class="head-tr">
               <th>Number</th>
               <th>Name</th>
               <th>Position</th>
@@ -66,7 +66,7 @@
           <span class="birth-date">Birth-Date</span> | <span class="birth-place">Birth-Place</span>
         </div>
         <div class="plus-sign-container">
-          <span>Add To Favorites</span> <i class="plus-sign fa-solid fa-circle-plus"></i>
+          <span class="add-to-favorites">Add To Favorites</span> <i class="plus-sign fa-solid fa-circle-plus"></i>
         </div>
       </div>
     </div>
@@ -77,13 +77,15 @@
       <div class="favorite-players-table-container">
         <table id="favorite-players-table">
           <thead>
-            <tr>
+            <tr class="head-tr">
               <th>Number</th>
               <th>Name</th>
               <th>Position</th>
               <th>Delete?</th>
             </tr>
           </thead>
+          <tbody id="favorite-tbody" class="favorite-tbody">
+          </tbody>
         </table>
       </div>
     </div>
@@ -104,7 +106,7 @@
         <div class="advanced-stats-table-container">
           <table class="advanced-stats-table">
             <thead>
-              <tr>
+              <tr class="head-tr">
                 <th>Month</th>
                 <th>PPG</th>
                 <th>SHG</th>
