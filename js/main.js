@@ -212,6 +212,51 @@ $table.addEventListener('click', function (event) {
     }
   });
   xhr6.send();
+
+  var xhr7 = new XMLHttpRequest();
+  xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=onPaceRegularSeason&season=20222023');
+  xhr7.responseType = 'json';
+  xhr7.addEventListener('load', function (event) {
+    var $oldTableBody = document.querySelector('.projectedStatsTbody');
+    if ($oldTableBody) {
+      $oldTableBody.remove();
+    }
+    var $onPaceTable = document.querySelector('.on-pace-table');
+    var $onPaceTbody = document.createElement('tbody');
+    $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
+    var $onPaceRow = document.createElement('tr');
+    var $td1 = document.createElement('td');
+    $td1.textContent = xhr7.response.stats[0].splits[0].stat.goals;
+    var $td2 = document.createElement('td');
+    $td2.textContent = xhr7.response.stats[0].splits[0].stat.assists;
+    var $td3 = document.createElement('td');
+    $td3.textContent = xhr7.response.stats[0].splits[0].stat.points;
+    var $td4 = document.createElement('td');
+    $td4.textContent = xhr7.response.stats[0].splits[0].stat.blocked;
+    var $td5 = document.createElement('td');
+    $td5.textContent = xhr7.response.stats[0].splits[0].stat.faceOffPct;
+    var $td6 = document.createElement('td');
+    $td6.textContent = xhr7.response.stats[0].splits[0].stat.hits;
+    var $td7 = document.createElement('td');
+    $td7.textContent = xhr7.response.stats[0].splits[0].stat.overTimeGoals;
+    var $td8 = document.createElement('td');
+    $td8.textContent = xhr7.response.stats[0].splits[0].stat.pim;
+    var $td9 = document.createElement('td');
+    $td9.textContent = xhr7.response.stats[0].splits[0].stat.plusMinus;
+
+    $onPaceTable.appendChild($onPaceTbody);
+    $onPaceTbody.appendChild($onPaceRow);
+    $onPaceRow.appendChild($td1);
+    $onPaceRow.appendChild($td2);
+    $onPaceRow.appendChild($td3);
+    $onPaceRow.appendChild($td4);
+    $onPaceRow.appendChild($td5);
+    $onPaceRow.appendChild($td6);
+    $onPaceRow.appendChild($td7);
+    $onPaceRow.appendChild($td8);
+    $onPaceRow.appendChild($td9);
+  });
+  xhr7.send();
 });
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
@@ -229,6 +274,7 @@ $plusSignContainer.addEventListener('click', function (event) {
   xhr4.addEventListener('load', function () {
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTr = document.createElement('tr');
+    $favoriteTr.setAttribute('id', event.target.id);
     var $favoriteTd1 = document.createElement('td');
     $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
     var $favoriteTd2 = document.createElement('td');
@@ -246,6 +292,20 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
   });
+
+  // if ($favoriteTbody.hasChildNodes('tr')) {
+  //   console.log($favoriteTbody.closest('tr'));
+  //   var $closestFavoriteTrId = $favoriteTbody.closest('tr').id;
+  //   var xhr7 = new XMLHttpRequest();
+  //   xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $closestFavoriteTrId + '/stats?stats=homeAndAway&season=20222023');
+  //   xhr7.responseType = 'json';
+  //   xhr7.addEventListener('load', function () {
+  //     var $averagePpgText = document.querySelector('.avg-ppg');
+  //     $averagePpgText.textContent = xhr7.response.stats[0].splits[1].stat.goals;
+  //   });
+  //   xhr7.send();
+  // }
+
   xhr4.send();
 });
 

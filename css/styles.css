@@ -11,6 +11,10 @@ body {
   margin: 0;
 }
 
+table {
+  margin-bottom: 1.5rem;
+}
+
 .hidden {
   display: none !important;
 }
@@ -125,6 +129,20 @@ td {
 
 .favorite-players-table-container {
   display: flex;
+  justify-content: center;
+}
+
+.avg-points-container {
+  text-align: center;
+}
+
+.on-pace-text-container {
+  text-align: center;
+}
+
+.on-pace-table-container {
+  display: flex;
+  text-align: center;
   justify-content: center;
 }
 
