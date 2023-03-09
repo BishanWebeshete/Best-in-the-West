@@ -3,6 +3,14 @@ header {
   background-color: #017bfe;
 }
 
+body {
+  background-image: url("https://c0.wallpaperflare.com/preview/742/406/570/ice-rink-background-sports.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  margin: 0;
+}
+
 .hidden {
   display: none !important;
 }
@@ -99,6 +107,13 @@ tr:nth-child(even) {
   background-color: #eee;
 }
 
+td {
+  border-color: #5585b5;
+  border: 1rem;
+  text-align: center;
+  padding: 0.25rem;
+}
+
 .player-profile-name {
   flex-basis: calc(100% / 1);
   text-align: center;
@@ -151,11 +166,6 @@ tr:nth-child(even) {
   border-radius: 1rem;
 }
 
-td {
-  text-align: center;
-  padding: 0.25rem;
-}
-
 tr:hover {
   cursor: pointer;
 }
@@ -185,6 +195,10 @@ button:hover {
     cursor: pointer;
   }
 
+  i:hover {
+    cursor: pointer;
+  }
+
   ol {
     list-style: none;
   }
@@ -204,5 +218,59 @@ button:hover {
 
   td {
     padding: 0.5rem 1.5rem;
+  }
+
+  .position {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .height {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .weight {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .age {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .gp {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .goals {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .assists {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .birth-date {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .birth-place {
+    margin: 0.25rem;
+    font-size: 1.5rem;
+  }
+
+  .add-to-favorites {
+    font-size: 1.5rem;
+    color: #017bfd;
+  }
+
+  table {
+    width: 55%;
   }
 }
