@@ -261,6 +261,7 @@ $table.addEventListener('click', function (event) {
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
 $plusSignContainer.addEventListener('click', function (event) {
+  var id = event.target.getAttribute('id');
   if (event.target.tagName !== 'I') {
     return;
   }
@@ -292,22 +293,41 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
   });
-
-  // if ($favoriteTbody.hasChildNodes('tr')) {
-  //   console.log($favoriteTbody.closest('tr'));
-  //   var $closestFavoriteTrId = $favoriteTbody.closest('tr').id;
-  //   var xhr7 = new XMLHttpRequest();
-  //   xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $closestFavoriteTrId + '/stats?stats=homeAndAway&season=20222023');
-  //   xhr7.responseType = 'json';
-  //   xhr7.addEventListener('load', function () {
-  //     var $averagePpgText = document.querySelector('.avg-ppg');
-  //     $averagePpgText.textContent = xhr7.response.stats[0].splits[1].stat.goals;
-  //   });
-  //   xhr7.send();
-  // }
-
   xhr4.send();
-});
+
+  if ($favoriteTbody.hasChildNodes('tr')) {
+    var xhr8 = new XMLHttpRequest();
+    xhr8.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id + '/stats?stats=homeAndAway&season=20222023');
+    xhr8.responseType = 'json';
+    xhr8.addEventListener('load', function () {
+      var ppg = 0;
+      var playerGoals = xhr8.response.stats[0].splits[0].stat.goals + xhr8.response.stats[0].splits[1].stat.goals;
+      var playerAssists = xhr8.response.stats[0].splits[0].stat.assists + xhr8.response.stats[0].splits[1].stat.assists;
+      var playerGames = xhr8.response.stats[0].splits[0].stat.games + xhr8.response.stats[0].splits[1].stat.games;
+      var playerPoints = playerGoals + playerAssists;
+      var $averagePpgText = document.querySelector('.avg-ppg');
+      var pointsPerGame = playerPoints / playerGames;
+      ppg += pointsPerGame;
+      $averagePpgText.textContent = ppg;
+    });
+    xhr8.send();
+  }
+}
+  //   var xhr8 = new XMLHttpRequest();
+  //   xhr8.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id + '/stats?stats=homeAndAway&season=20222023');
+  //   xhr8.responseType = 'json';
+  //   xhr8.addEventListener('load', function () {
+  //     console.log(xhr8.response);
+  //     var playerGoals = xhr8.response.stats[0].splits[0].stat.goals + xhr8.response.stats[0].splits[1].stat.goals;
+  //     var playerAssists = xhr8.response.stats[0].splits[0].stat.assists + xhr8.response.stats[0].splits[1].stat.assists;
+  //     var playerGames = xhr8.response.stats[0].splits[0].stat.games + xhr8.response.stats[0].splits[1].stat.games;
+  //     var playerPoints = playerGoals + playerAssists;
+  //     var $averagePpgText = document.querySelector('.avg-ppg');
+  //     $averagePpgText.textContent = playerPoints / playerGames;
+  //   });
+  //   xhr8.send();
+  // }
+);
 
 var closestTr = null;
 var $modal = document.querySelector('.modal-container');
