@@ -214,7 +214,7 @@ $table.addEventListener('click', function (event) {
   xhr6.send();
 
   var xhr7 = new XMLHttpRequest();
-  xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=onPaceRegularSeason&season=20222023');
+  xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
   xhr7.responseType = 'json';
   xhr7.addEventListener('load', function (event) {
     var $oldTableBody = document.querySelector('.projectedStatsTbody');
@@ -226,23 +226,23 @@ $table.addEventListener('click', function (event) {
     $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
     var $onPaceRow = document.createElement('tr');
     var $td1 = document.createElement('td');
-    $td1.textContent = xhr7.response.stats[0].splits[0].stat.goals;
+    $td1.textContent = xhr7.response.stats[0].splits[0].stat.rankPoints;
     var $td2 = document.createElement('td');
-    $td2.textContent = xhr7.response.stats[0].splits[0].stat.assists;
+    $td2.textContent = xhr7.response.stats[0].splits[0].stat.rankGoals;
     var $td3 = document.createElement('td');
-    $td3.textContent = xhr7.response.stats[0].splits[0].stat.points;
+    $td3.textContent = xhr7.response.stats[0].splits[0].stat.rankAssists;
     var $td4 = document.createElement('td');
-    $td4.textContent = xhr7.response.stats[0].splits[0].stat.blocked;
+    $td4.textContent = xhr7.response.stats[0].splits[0].stat.rankPlusMinus;
     var $td5 = document.createElement('td');
-    $td5.textContent = xhr7.response.stats[0].splits[0].stat.faceOffPct;
+    $td5.textContent = xhr7.response.stats[0].splits[0].stat.rankPowerPlayGoals;
     var $td6 = document.createElement('td');
-    $td6.textContent = xhr7.response.stats[0].splits[0].stat.hits;
+    $td6.textContent = xhr7.response.stats[0].splits[0].stat.rankShortHandedGoals;
     var $td7 = document.createElement('td');
-    $td7.textContent = xhr7.response.stats[0].splits[0].stat.overTimeGoals;
+    $td7.textContent = xhr7.response.stats[0].splits[0].stat.rankShotPct;
     var $td8 = document.createElement('td');
-    $td8.textContent = xhr7.response.stats[0].splits[0].stat.pim;
+    $td8.textContent = xhr7.response.stats[0].splits[0].stat.rankGamesPlayed;
     var $td9 = document.createElement('td');
-    $td9.textContent = xhr7.response.stats[0].splits[0].stat.plusMinus;
+    $td9.textContent = xhr7.response.stats[0].splits[0].stat.rankPenaltyMinutes;
 
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
