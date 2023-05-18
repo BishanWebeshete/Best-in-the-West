@@ -38,4 +38,3 @@ Try the application live at: https://bishanwebeshete.github.io/ajax-project/
 ```
 
 2. Start the project. Once started, you can view the application by opening http://localhost:5500 in your browser.
-A dynamic HTML, CSS, and JavaScript solo project which allows users to view detailed information regarding the NHL teams in the pacific division as well as specific information about each player on the roster. Users can also add and delete multiple players to their favorites list.
