@@ -54,7 +54,8 @@ a {
   justify-content: center;
 }
 
-.listed-images-container {
+.listed-images-container,
+.advanced-stats-table-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,26 +124,16 @@ td {
   text-align: center;
 }
 
-.favorite-players-main-text-container {
+.favorite-players-main-text-container,
+.where-he-stands-container,
+.avg-points-container,
+.advanced-stats-text {
   text-align: center;
 }
 
-.favorite-players-table-container {
-  display: flex;
-  justify-content: center;
-}
-
-.avg-points-container {
-  text-align: center;
-}
-
-.where-he-stands-container {
-  text-align: center;
-}
-
+.favorite-players-table-container,
 .where-he-stands-table-container {
   display: flex;
-  text-align: center;
   justify-content: center;
 }
 
@@ -184,22 +175,23 @@ td {
   border-radius: 1rem;
 }
 
-tr:hover {
-  cursor: pointer;
-}
-
+tr:hover,
 button:hover {
   cursor: pointer;
 }
 
-.advanced-stats-text {
-  text-align: center;
+li:hover {
+  background-color: #017bfe;
+  cursor: pointer;
 }
 
-.advanced-stats-table-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+i:hover {
+  cursor: pointer;
+}
+
+.add-to-favorites {
+  font-size: 1.5rem;
+  color: #017bfd;
 }
 
 @media screen and (min-width: 768px) {
@@ -208,84 +200,32 @@ button:hover {
     border-radius: 15px;
   }
 
-  li:hover {
-    background-color: #017bfe;
-    cursor: pointer;
-  }
-
-  i:hover {
-    cursor: pointer;
-  }
-
   ol {
     list-style: none;
   }
 
-  .player-profile-name {
-    flex-basis: calc(100% / 1);
-    text-align: center;
-  }
-
-  .player-profile-info {
-    flex-basis: calc(100% / 1);
-  }
-
+  .player-profile-name,
+  .player-profile-info,
   .image-container {
     flex-basis: calc(100% / 1);
+    text-align: center;
   }
 
   td {
     padding: 0.5rem 1.5rem;
   }
 
-  .position {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .height {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .weight {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .age {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .gp {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .goals {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .assists {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
-  .birth-date {
-    margin: 0.25rem;
-    font-size: 1.5rem;
-  }
-
+  .position,
+  .height,
+  .weight,
+  .age,
+  .gp,
+  .goals,
+  .assists,
+  .birth-date,
   .birth-place {
     margin: 0.25rem;
     font-size: 1.5rem;
-  }
-
-  .add-to-favorites {
-    font-size: 1.5rem;
-    color: #017bfd;
   }
 
   table {
