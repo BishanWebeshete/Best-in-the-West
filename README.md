@@ -6,7 +6,7 @@ This project was created with HTML, CSS, and vanilla JavaScript to obtain a stro
 
 ## Live Demo
 
-Try the application live at: https://bishanwebeshete.github.io/ajax-project/
+Try the application live at: https://bishanwebeshete.github.io/Best-in-the-West/
 
 ## Technologies Used
 
