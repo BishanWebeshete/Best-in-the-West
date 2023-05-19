@@ -241,8 +241,6 @@ $table.addEventListener('click', function (event) {
     $td7.textContent = xhr7.response.stats[0].splits[0].stat.rankShotPct;
     var $td8 = document.createElement('td');
     $td8.textContent = xhr7.response.stats[0].splits[0].stat.rankGamesPlayed;
-    var $td9 = document.createElement('td');
-    $td9.textContent = xhr7.response.stats[0].splits[0].stat.rankPenaltyMinutes;
 
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
@@ -254,7 +252,6 @@ $table.addEventListener('click', function (event) {
     $onPaceRow.appendChild($td6);
     $onPaceRow.appendChild($td7);
     $onPaceRow.appendChild($td8);
-    $onPaceRow.appendChild($td9);
   });
   xhr7.send();
 });
