@@ -1,8 +1,8 @@
 # Best-In-The-West
 
-A dynamic HTML, CSS, and JavaScript solo project for hockey fans to keep track of their favorite teams and players in teh pacific division.
+A dynamic HTML, CSS, and JavaScript solo project for hockey fans to keep track of their favorite teams and players in the pacific division.
 
-This project was created with HTML, CSS, and vanilla JavaScript to obtain a strong foundation on DOM manipulation as well as styling via HTML and CSS. I wanted to create a CRUD app which allows users to view up to date stats on Pacific division NHL players and teams as well as add and remove them from their favorites list.
+This project was created with HTML, CSS, and vanilla JavaScript to obtain a strong foundation on DOM manipulation as well as styling via HTML and CSS. I wanted to create a CRUD application which allows users to view up to date stats on Pacific division NHL players and teams as well as the ability to add and remove them from their favorites list.
 
 ## Live Demo
 
