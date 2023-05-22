@@ -8,13 +8,14 @@ var $favoritePlayersContainer = document.querySelector('.favorite-players-conten
 var $favoritesButton = document.querySelector('.favorites');
 var $advancedStatsContainer = document.querySelector('.advanced-stats-container');
 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
-xhr.responseType = 'json';
-xhr.addEventListener('load', function () {
-  for (let i = 0; i < xhr.response.records[3].teamRecords.length; i++) {
-    var teamID = xhr.response.records[3].teamRecords[i].team.id;
-    var teamName = xhr.response.records[3].teamRecords[i].team.name;
+var teams = new XMLHttpRequest();
+teams.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
+teams.responseType = 'json';
+teams.addEventListener('load', function () {
+  var records = teams.response.records[3].teamRecords;
+  for (let i = 0; i < records.length; i++) {
+    var teamID = records[i].team.id;
+    var teamName = records[i].team.name;
     var $li = document.createElement('li');
     var $img = document.createElement('img');
     if (teamName === 'Vegas Golden Knights') {
@@ -46,7 +47,7 @@ xhr.addEventListener('load', function () {
     $ol.appendChild($li);
   }
 });
-xhr.send();
+teams.send();
 
 var $imagesContainer = document.querySelector('.listed-images-container');
 $imagesContainer.addEventListener('click', function (event) {
@@ -57,25 +58,26 @@ $imagesContainer.addEventListener('click', function (event) {
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.remove('hidden');
   var teamID = event.target.id;
-  var xhr1 = new XMLHttpRequest();
-  xhr1.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
-  xhr1.responseType = 'json';
-  xhr1.addEventListener('load', function () {
+  var selectedTeam = new XMLHttpRequest();
+  selectedTeam.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
+  selectedTeam.responseType = 'json';
+  selectedTeam.addEventListener('load', function () {
     var $oldTableBody = document.querySelector('tbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
     var $tbody = document.createElement('tbody');
-    for (let i = 0; i < xhr1.response.roster.length; i++) {
+    var roster = selectedTeam.response.roster;
+    for (let i = 0; i < roster.length; i++) {
       var $table = document.querySelector('#table');
       var $tr = document.createElement('tr');
-      $tr.setAttribute('id', xhr1.response.roster[i].person.id);
+      $tr.setAttribute('id', roster[i].person.id);
       var $td1 = document.createElement('td');
-      $td1.textContent = xhr1.response.roster[i].jerseyNumber;
+      $td1.textContent = roster[i].jerseyNumber;
       var $td2 = document.createElement('td');
-      $td2.textContent = xhr1.response.roster[i].person.fullName;
+      $td2.textContent = roster[i].person.fullName;
       var $td3 = document.createElement('td');
-      $td3.textContent = xhr1.response.roster[i].position.abbreviation;
+      $td3.textContent = roster[i].position.abbreviation;
       $tr.appendChild($td1);
       $tr.appendChild($td2);
       $tr.appendChild($td3);
@@ -84,24 +86,25 @@ $imagesContainer.addEventListener('click', function (event) {
     }
 
   });
-  xhr1.send();
+  selectedTeam.send();
 
-  var xhr5 = new XMLHttpRequest();
-  xhr5.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/stats');
-  xhr5.responseType = 'json';
-  xhr5.addEventListener('load', function (event) {
+  var teamInfo = new XMLHttpRequest();
+  teamInfo.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/stats');
+  teamInfo.responseType = 'json';
+  teamInfo.addEventListener('load', function (event) {
+    var details = teamInfo.response.stats[0].splits[0];
     var $rosterName = document.querySelector('.official-roster');
-    $rosterName.textContent = xhr5.response.stats[0].splits[0].team.name + ' ' + 'Official' + ' ' + 'Roster';
+    $rosterName.textContent = details.team.name + ' ' + 'Official' + ' ' + 'Roster';
     var $wins = document.querySelector('.wins');
-    $wins.textContent = xhr5.response.stats[0].splits[0].stat.wins;
+    $wins.textContent = details.stat.wins;
     var $losses = document.querySelector('.losses');
-    $losses.textContent = xhr5.response.stats[0].splits[0].stat.losses;
+    $losses.textContent = details.stat.losses;
     var $overTimeLosses = document.querySelector('.otl');
-    $overTimeLosses.textContent = xhr5.response.stats[0].splits[0].stat.ot;
+    $overTimeLosses.textContent = details.stat.ot;
     var $points = document.querySelector('.points');
-    $points.textContent = xhr5.response.stats[0].splits[0].stat.pts;
+    $points.textContent = details.stat.pts;
   });
-  xhr5.send();
+  teamInfo.send();
 });
 
 var $rankingsTab = document.querySelector('.rankings');
@@ -122,12 +125,12 @@ $table.addEventListener('click', function (event) {
   $playerProfileContainer.classList.remove('hidden');
   $tableContentContainer.classList.add('hidden');
   var $trId = event.target.closest('tr').id;
-  var xhr2 = new XMLHttpRequest();
-  xhr2.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId);
-  xhr2.responseType = 'json';
-  xhr2.addEventListener('load', function () {
+  var playerInfo = new XMLHttpRequest();
+  playerInfo.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId);
+  playerInfo.responseType = 'json';
+  playerInfo.addEventListener('load', function () {
     var $playerImg = document.querySelector('.player-image');
-    var currentTeam = xhr2.response.people[0].currentTeam.name;
+    var currentTeam = playerInfo.response.people[0].currentTeam.name;
     if (currentTeam === 'Vegas Golden Knights') {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Vegas_Golden_Knights_logo.svg/800px-Vegas_Golden_Knights_logo.svg.png');
     } else if (currentTeam === 'Los Angeles Kings') {
@@ -145,41 +148,42 @@ $table.addEventListener('click', function (event) {
     } else if (currentTeam === 'Calgary Flames') {
       $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Calgary_Flames_logo.svg/1200px-Calgary_Flames_logo.svg.png');
     }
-    $plusSign.setAttribute('id', xhr2.response.people[0].id);
+    $plusSign.setAttribute('id', playerInfo.response.people[0].id);
     var $name = document.querySelector('.name');
-    $name.textContent = xhr2.response.people[0].fullName;
+    $name.textContent = playerInfo.response.people[0].fullName;
     var $position = document.querySelector('.position');
-    $position.textContent = xhr2.response.people[0].primaryPosition.abbreviation;
+    $position.textContent = playerInfo.response.people[0].primaryPosition.abbreviation;
     var $height = document.querySelector('.height');
-    $height.textContent = xhr2.response.people[0].height;
+    $height.textContent = playerInfo.response.people[0].height;
     var $weight = document.querySelector('.weight');
-    $weight.textContent = xhr2.response.people[0].weight + ' ' + 'lbs';
+    $weight.textContent = playerInfo.response.people[0].weight + ' ' + 'lbs';
     var $age = document.querySelector('.age');
-    $age.textContent = xhr2.response.people[0].currentAge + ' ' + 'yrs';
+    $age.textContent = playerInfo.response.people[0].currentAge + ' ' + 'yrs';
     var $birthDay = document.querySelector('.birth-date');
-    $birthDay.textContent = xhr2.response.people[0].birthDate;
+    $birthDay.textContent = playerInfo.response.people[0].birthDate;
     var $birthPlace = document.querySelector('.birth-place');
-    $birthPlace.textContent = xhr2.response.people[0].birthCity + ',' + ' ' + xhr2.response.people[0].birthCountry;
+    $birthPlace.textContent = playerInfo.response.people[0].birthCity + ',' + ' ' + playerInfo.response.people[0].birthCountry;
   });
-  xhr2.send();
+  playerInfo.send();
 
-  var xhr3 = new XMLHttpRequest();
-  xhr3.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=homeAndAway&season=20222023');
-  xhr3.responseType = 'json';
-  xhr3.addEventListener('load', function () {
+  var stats = new XMLHttpRequest();
+  stats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=homeAndAway&season=20222023');
+  stats.responseType = 'json';
+  stats.addEventListener('load', function () {
+    var playerStats = stats.response.stats[0];
     var $gamesPlayed = document.querySelector('.gp');
-    $gamesPlayed.textContent = xhr3.response.stats[0].splits[0].stat.games + xhr3.response.stats[0].splits[1].stat.games + ' ' + 'gp';
+    $gamesPlayed.textContent = playerStats.splits[0].stat.games + playerStats.splits[1].stat.games + ' ' + 'gp';
     var $goals = document.querySelector('.goals');
-    $goals.textContent = xhr3.response.stats[0].splits[0].stat.goals + xhr3.response.stats[0].splits[1].stat.goals + ' ' + 'G';
+    $goals.textContent = playerStats.splits[0].stat.goals + playerStats.splits[1].stat.goals + ' ' + 'G';
     var $assists = document.querySelector('.assists');
-    $assists.textContent = xhr3.response.stats[0].splits[0].stat.assists + xhr3.response.stats[0].splits[1].stat.assists + ' ' + 'A';
+    $assists.textContent = playerStats.splits[0].stat.assists + playerStats.splits[1].stat.assists + ' ' + 'A';
   });
-  xhr3.send();
+  stats.send();
 
-  var xhr6 = new XMLHttpRequest();
-  xhr6.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
-  xhr6.responseType = 'json';
-  xhr6.addEventListener('load', function (event) {
+  var advancedStats = new XMLHttpRequest();
+  advancedStats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
+  advancedStats.responseType = 'json';
+  advancedStats.addEventListener('load', function (event) {
     var $oldTableBody = document.querySelector('.advancedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
@@ -187,20 +191,21 @@ $table.addEventListener('click', function (event) {
     var $advancedStatsTable = document.querySelector('.advanced-stats-table');
     var $advancedStatsTbody = document.createElement('tbody');
     $advancedStatsTbody.setAttribute('class', 'advancedStatsTbody');
-    for (let i = 0; i < xhr6.response.stats[0].splits.length; i++) {
+    for (let i = 0; i < advancedStats.response.stats[0].splits.length; i++) {
+      var detailedStats = advancedStats.response.stats[0].splits[i];
       var $advancedStatsTr = document.createElement('tr');
       var $advancedStatsTh = document.createElement('th');
-      $advancedStatsTh.textContent = xhr6.response.stats[0].splits[i].month;
+      $advancedStatsTh.textContent = detailedStats.month;
       var $advancedStatsTd = document.createElement('td');
-      $advancedStatsTd.textContent = xhr6.response.stats[0].splits[i].stat.shortHandedGoals;
+      $advancedStatsTd.textContent = detailedStats.stat.shortHandedGoals;
       var $advancedStatsTd1 = document.createElement('td');
-      $advancedStatsTd1.textContent = xhr6.response.stats[0].splits[i].stat.powerPlayGoals;
+      $advancedStatsTd1.textContent = detailedStats.stat.powerPlayGoals;
       var $advancedStatsTd2 = document.createElement('td');
-      $advancedStatsTd2.textContent = xhr6.response.stats[0].splits[i].stat.pim;
+      $advancedStatsTd2.textContent = detailedStats.stat.pim;
       var $advancedStatsTd3 = document.createElement('td');
-      $advancedStatsTd3.textContent = xhr6.response.stats[0].splits[i].stat.shots;
+      $advancedStatsTd3.textContent = detailedStats.stat.shots;
       var $advancedStatsTd4 = document.createElement('td');
-      $advancedStatsTd4.textContent = xhr6.response.stats[0].splits[i].stat.timeOnIcePerGame;
+      $advancedStatsTd4.textContent = detailedStats.stat.timeOnIcePerGame;
       $advancedStatsTr.appendChild($advancedStatsTh);
       $advancedStatsTr.appendChild($advancedStatsTd1);
       $advancedStatsTr.appendChild($advancedStatsTd);
@@ -211,36 +216,37 @@ $table.addEventListener('click', function (event) {
       $advancedStatsTable.appendChild($advancedStatsTbody);
     }
   });
-  xhr6.send();
+  advancedStats.send();
 
-  var xhr7 = new XMLHttpRequest();
-  xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
-  xhr7.responseType = 'json';
-  xhr7.addEventListener('load', function (event) {
+  var rankings = new XMLHttpRequest();
+  rankings.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
+  rankings.responseType = 'json';
+  rankings.addEventListener('load', function (event) {
+    var playerRankings = rankings.response.stats[0].splits[0].stat;
     var $oldTableBody = document.querySelector('.projectedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
-    var $onPaceTable = document.querySelector('.on-pace-table');
+    var $onPaceTable = document.querySelector('.where-he-stands-table');
     var $onPaceTbody = document.createElement('tbody');
     $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
     var $onPaceRow = document.createElement('tr');
     var $td1 = document.createElement('td');
-    $td1.textContent = xhr7.response.stats[0].splits[0].stat.rankPoints;
+    $td1.textContent = playerRankings.rankPoints;
     var $td2 = document.createElement('td');
-    $td2.textContent = xhr7.response.stats[0].splits[0].stat.rankGoals;
+    $td2.textContent = playerRankings.rankGoals;
     var $td3 = document.createElement('td');
-    $td3.textContent = xhr7.response.stats[0].splits[0].stat.rankAssists;
+    $td3.textContent = playerRankings.rankAssists;
     var $td4 = document.createElement('td');
-    $td4.textContent = xhr7.response.stats[0].splits[0].stat.rankPlusMinus;
+    $td4.textContent = playerRankings.rankPlusMinus;
     var $td5 = document.createElement('td');
-    $td5.textContent = xhr7.response.stats[0].splits[0].stat.rankPowerPlayGoals;
+    $td5.textContent = playerRankings.rankPowerPlayGoals;
     var $td6 = document.createElement('td');
-    $td6.textContent = xhr7.response.stats[0].splits[0].stat.rankShortHandedGoals;
+    $td6.textContent = playerRankings.rankShortHandedGoals;
     var $td7 = document.createElement('td');
-    $td7.textContent = xhr7.response.stats[0].splits[0].stat.rankShotPct;
+    $td7.textContent = playerRankings.rankShotPct;
     var $td8 = document.createElement('td');
-    $td8.textContent = xhr7.response.stats[0].splits[0].stat.rankGamesPlayed;
+    $td8.textContent = playerRankings.rankGamesPlayed;
 
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
@@ -253,7 +259,7 @@ $table.addEventListener('click', function (event) {
     $onPaceRow.appendChild($td7);
     $onPaceRow.appendChild($td8);
   });
-  xhr7.send();
+  rankings.send();
 });
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
@@ -266,19 +272,20 @@ $plusSignContainer.addEventListener('click', function (event) {
   $favoritePlayersContainer.classList.remove('hidden');
   $playerProfileContainer.classList.add('hidden');
   var $iconId = event.target.closest('i').id;
-  var xhr4 = new XMLHttpRequest();
-  xhr4.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
-  xhr4.responseType = 'json';
-  xhr4.addEventListener('load', function () {
+  var favorites = new XMLHttpRequest();
+  favorites.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
+  favorites.responseType = 'json';
+  favorites.addEventListener('load', function () {
+    var favoriteInfo = favorites.response.people[0];
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTr = document.createElement('tr');
     $favoriteTr.setAttribute('id', event.target.id);
     var $favoriteTd1 = document.createElement('td');
-    $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
+    $favoriteTd1.textContent = favoriteInfo.primaryNumber;
     var $favoriteTd2 = document.createElement('td');
-    $favoriteTd2.textContent = xhr4.response.people[0].fullName;
+    $favoriteTd2.textContent = favoriteInfo.fullName;
     var $favoriteTd3 = document.createElement('td');
-    $favoriteTd3.textContent = xhr4.response.people[0].primaryPosition.abbreviation;
+    $favoriteTd3.textContent = favoriteInfo.primaryPosition.abbreviation;
     var $favoriteTd4 = document.createElement('td');
     var $trashIcon = document.createElement('i');
     $trashIcon.className = 'fa-solid fa-trash';
@@ -290,7 +297,7 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
   });
-  xhr4.send();
+  favorites.send();
 
   if ($favoriteTbody.hasChildNodes('tr')) {
     var xhr8 = new XMLHttpRequest();
