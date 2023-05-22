@@ -180,10 +180,10 @@ $table.addEventListener('click', function (event) {
   });
   stats.send();
 
-  var xhr6 = new XMLHttpRequest();
-  xhr6.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
-  xhr6.responseType = 'json';
-  xhr6.addEventListener('load', function (event) {
+  var advancedStats = new XMLHttpRequest();
+  advancedStats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
+  advancedStats.responseType = 'json';
+  advancedStats.addEventListener('load', function (event) {
     var $oldTableBody = document.querySelector('.advancedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
@@ -191,20 +191,21 @@ $table.addEventListener('click', function (event) {
     var $advancedStatsTable = document.querySelector('.advanced-stats-table');
     var $advancedStatsTbody = document.createElement('tbody');
     $advancedStatsTbody.setAttribute('class', 'advancedStatsTbody');
-    for (let i = 0; i < xhr6.response.stats[0].splits.length; i++) {
+    for (let i = 0; i < advancedStats.response.stats[0].splits.length; i++) {
+      var detailedStats = advancedStats.response.stats[0].splits[i];
       var $advancedStatsTr = document.createElement('tr');
       var $advancedStatsTh = document.createElement('th');
-      $advancedStatsTh.textContent = xhr6.response.stats[0].splits[i].month;
+      $advancedStatsTh.textContent = detailedStats.month;
       var $advancedStatsTd = document.createElement('td');
-      $advancedStatsTd.textContent = xhr6.response.stats[0].splits[i].stat.shortHandedGoals;
+      $advancedStatsTd.textContent = detailedStats.stat.shortHandedGoals;
       var $advancedStatsTd1 = document.createElement('td');
-      $advancedStatsTd1.textContent = xhr6.response.stats[0].splits[i].stat.powerPlayGoals;
+      $advancedStatsTd1.textContent = detailedStats.stat.powerPlayGoals;
       var $advancedStatsTd2 = document.createElement('td');
-      $advancedStatsTd2.textContent = xhr6.response.stats[0].splits[i].stat.pim;
+      $advancedStatsTd2.textContent = detailedStats.stat.pim;
       var $advancedStatsTd3 = document.createElement('td');
-      $advancedStatsTd3.textContent = xhr6.response.stats[0].splits[i].stat.shots;
+      $advancedStatsTd3.textContent = detailedStats.stat.shots;
       var $advancedStatsTd4 = document.createElement('td');
-      $advancedStatsTd4.textContent = xhr6.response.stats[0].splits[i].stat.timeOnIcePerGame;
+      $advancedStatsTd4.textContent = detailedStats.stat.timeOnIcePerGame;
       $advancedStatsTr.appendChild($advancedStatsTh);
       $advancedStatsTr.appendChild($advancedStatsTd1);
       $advancedStatsTr.appendChild($advancedStatsTd);
@@ -215,12 +216,13 @@ $table.addEventListener('click', function (event) {
       $advancedStatsTable.appendChild($advancedStatsTbody);
     }
   });
-  xhr6.send();
+  advancedStats.send();
 
-  var xhr7 = new XMLHttpRequest();
-  xhr7.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
-  xhr7.responseType = 'json';
-  xhr7.addEventListener('load', function (event) {
+  var rankings = new XMLHttpRequest();
+  rankings.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
+  rankings.responseType = 'json';
+  rankings.addEventListener('load', function (event) {
+    var playerRankings = rankings.response.stats[0].splits[0].stat;
     var $oldTableBody = document.querySelector('.projectedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
@@ -230,21 +232,21 @@ $table.addEventListener('click', function (event) {
     $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
     var $onPaceRow = document.createElement('tr');
     var $td1 = document.createElement('td');
-    $td1.textContent = xhr7.response.stats[0].splits[0].stat.rankPoints;
+    $td1.textContent = playerRankings.rankPoints;
     var $td2 = document.createElement('td');
-    $td2.textContent = xhr7.response.stats[0].splits[0].stat.rankGoals;
+    $td2.textContent = playerRankings.rankGoals;
     var $td3 = document.createElement('td');
-    $td3.textContent = xhr7.response.stats[0].splits[0].stat.rankAssists;
+    $td3.textContent = playerRankings.rankAssists;
     var $td4 = document.createElement('td');
-    $td4.textContent = xhr7.response.stats[0].splits[0].stat.rankPlusMinus;
+    $td4.textContent = playerRankings.rankPlusMinus;
     var $td5 = document.createElement('td');
-    $td5.textContent = xhr7.response.stats[0].splits[0].stat.rankPowerPlayGoals;
+    $td5.textContent = playerRankings.rankPowerPlayGoals;
     var $td6 = document.createElement('td');
-    $td6.textContent = xhr7.response.stats[0].splits[0].stat.rankShortHandedGoals;
+    $td6.textContent = playerRankings.rankShortHandedGoals;
     var $td7 = document.createElement('td');
-    $td7.textContent = xhr7.response.stats[0].splits[0].stat.rankShotPct;
+    $td7.textContent = playerRankings.rankShotPct;
     var $td8 = document.createElement('td');
-    $td8.textContent = xhr7.response.stats[0].splits[0].stat.rankGamesPlayed;
+    $td8.textContent = playerRankings.rankGamesPlayed;
 
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
@@ -257,7 +259,7 @@ $table.addEventListener('click', function (event) {
     $onPaceRow.appendChild($td7);
     $onPaceRow.appendChild($td8);
   });
-  xhr7.send();
+  rankings.send();
 });
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
@@ -270,19 +272,20 @@ $plusSignContainer.addEventListener('click', function (event) {
   $favoritePlayersContainer.classList.remove('hidden');
   $playerProfileContainer.classList.add('hidden');
   var $iconId = event.target.closest('i').id;
-  var xhr4 = new XMLHttpRequest();
-  xhr4.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
-  xhr4.responseType = 'json';
-  xhr4.addEventListener('load', function () {
+  var favorites = new XMLHttpRequest();
+  favorites.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $iconId);
+  favorites.responseType = 'json';
+  favorites.addEventListener('load', function () {
+    var favoriteInfo = favorites.response.people[0];
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTr = document.createElement('tr');
     $favoriteTr.setAttribute('id', event.target.id);
     var $favoriteTd1 = document.createElement('td');
-    $favoriteTd1.textContent = xhr4.response.people[0].primaryNumber;
+    $favoriteTd1.textContent = favoriteInfo.primaryNumber;
     var $favoriteTd2 = document.createElement('td');
-    $favoriteTd2.textContent = xhr4.response.people[0].fullName;
+    $favoriteTd2.textContent = favoriteInfo.fullName;
     var $favoriteTd3 = document.createElement('td');
-    $favoriteTd3.textContent = xhr4.response.people[0].primaryPosition.abbreviation;
+    $favoriteTd3.textContent = favoriteInfo.primaryPosition.abbreviation;
     var $favoriteTd4 = document.createElement('td');
     var $trashIcon = document.createElement('i');
     $trashIcon.className = 'fa-solid fa-trash';
@@ -294,7 +297,7 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTd4.appendChild($trashIcon);
     $favoriteTr.appendChild($favoriteTd4);
   });
-  xhr4.send();
+  favorites.send();
 
   if ($favoriteTbody.hasChildNodes('tr')) {
     var xhr8 = new XMLHttpRequest();
