@@ -7,6 +7,15 @@ var $plusSignContainer = document.querySelector('.plus-sign-container');
 var $favoritePlayersContainer = document.querySelector('.favorite-players-content-container');
 var $favoritesButton = document.querySelector('.favorites');
 var $advancedStatsContainer = document.querySelector('.advanced-stats-container');
+var $bestInTheWest = document.querySelector('.best-in-the-west');
+
+function viewRankings() {
+  $tableContentContainer.classList.add('hidden');
+  $rankingsContainer.classList.remove('hidden');
+  $playerProfileContainer.classList.add('hidden');
+  $favoritePlayersContainer.classList.add('hidden');
+  $advancedStatsContainer.classList.add('hidden');
+}
 
 var teams = new XMLHttpRequest();
 teams.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
@@ -51,13 +60,16 @@ teams.send();
 
 var $imagesContainer = document.querySelector('.listed-images-container');
 $imagesContainer.addEventListener('click', function (event) {
-  if (event.target.tagName !== 'IMG') {
+  var teamElement = event.target;
+  if (event.target.tagName === 'LI') {
+    teamElement = event.target.firstChild;
+  } else if (event.target.tagName !== 'IMG') {
     return;
   }
   $favoritePlayersContainer.classList.add('hidden');
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.remove('hidden');
-  var teamID = event.target.id;
+  var teamID = teamElement.id;
   var selectedTeam = new XMLHttpRequest();
   selectedTeam.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
   selectedTeam.responseType = 'json';
@@ -221,43 +233,32 @@ $table.addEventListener('click', function (event) {
   var rankings = new XMLHttpRequest();
   rankings.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
   rankings.responseType = 'json';
+  var $loadingSign = document.querySelector('.lds-ring');
+  var $onPaceTable = document.querySelector('.where-he-stands-table');
+  $loadingSign.classList.remove('hidden');
+  $onPaceTable.classList.add('hidden');
   rankings.addEventListener('load', function (event) {
+    $loadingSign.classList.add('hidden');
+    $onPaceTable.classList.remove('hidden');
     var playerRankings = rankings.response.stats[0].splits[0].stat;
     var $oldTableBody = document.querySelector('.projectedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
-    var $onPaceTable = document.querySelector('.where-he-stands-table');
     var $onPaceTbody = document.createElement('tbody');
     $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
     var $onPaceRow = document.createElement('tr');
-    var $td1 = document.createElement('td');
-    $td1.textContent = playerRankings.rankPoints;
-    var $td2 = document.createElement('td');
-    $td2.textContent = playerRankings.rankGoals;
-    var $td3 = document.createElement('td');
-    $td3.textContent = playerRankings.rankAssists;
-    var $td4 = document.createElement('td');
-    $td4.textContent = playerRankings.rankPlusMinus;
-    var $td5 = document.createElement('td');
-    $td5.textContent = playerRankings.rankPowerPlayGoals;
-    var $td6 = document.createElement('td');
-    $td6.textContent = playerRankings.rankShortHandedGoals;
-    var $td7 = document.createElement('td');
-    $td7.textContent = playerRankings.rankShotPct;
-    var $td8 = document.createElement('td');
-    $td8.textContent = playerRankings.rankGamesPlayed;
-
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
-    $onPaceRow.appendChild($td1);
-    $onPaceRow.appendChild($td2);
-    $onPaceRow.appendChild($td3);
-    $onPaceRow.appendChild($td4);
-    $onPaceRow.appendChild($td5);
-    $onPaceRow.appendChild($td6);
-    $onPaceRow.appendChild($td7);
-    $onPaceRow.appendChild($td8);
+
+    var rankingKeys = ['rankPoints', 'rankGoals', 'rankAssists',
+      'rankPlusMinus', 'rankPowerPlayGoals',
+      'rankShortHandedGoals', 'rankShotPct', 'rankGamesPlayed'];
+    for (var key of rankingKeys) {
+      var $td = document.createElement('td');
+      $td.textContent = playerRankings[key];
+      $onPaceRow.appendChild($td);
+    }
   });
   rankings.send();
 });
@@ -344,4 +345,8 @@ $favoritesButton.addEventListener('click', function (event) {
   $tableContentContainer.classList.add('hidden');
   $playerProfileContainer.classList.add('hidden');
   $advancedStatsContainer.classList.add('hidden');
+});
+
+$bestInTheWest.addEventListener('click', function (_) {
+  viewRankings();
 });
