@@ -7,6 +7,26 @@ var $plusSignContainer = document.querySelector('.plus-sign-container');
 var $favoritePlayersContainer = document.querySelector('.favorite-players-content-container');
 var $favoritesButton = document.querySelector('.favorites');
 var $advancedStatsContainer = document.querySelector('.advanced-stats-container');
+var $bestInTheWest = document.querySelector('.best-in-the-west');
+
+function viewRankings() {
+  $tableContentContainer.classList.add('hidden');
+  $rankingsContainer.classList.remove('hidden');
+  $playerProfileContainer.classList.add('hidden');
+  $favoritePlayersContainer.classList.add('hidden');
+  $advancedStatsContainer.classList.add('hidden');
+}
+
+var teamImageSources = {
+  'Vegas Golden Knights': 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Vegas_Golden_Knights_logo.svg/800px-Vegas_Golden_Knights_logo.svg.png',
+  'Los Angeles Kings': 'https://upload.wikimedia.org/wikipedia/en/thumb/6/63/Los_Angeles_Kings_logo.svg/1200px-Los_Angeles_Kings_logo.svg.png',
+  'Edmonton Oilers': 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Logo_Edmonton_Oilers.svg/1200px-Logo_Edmonton_Oilers.svg.png',
+  'Seattle Kraken': 'https://upload.wikimedia.org/wikipedia/en/thumb/4/48/Seattle_Kraken_official_logo.svg/1200px-Seattle_Kraken_official_logo.svg.png',
+  'Calgary Flames': 'https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Calgary_Flames_logo.svg/1200px-Calgary_Flames_logo.svg.png',
+  'Vancouver Canucks': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Vancouver_Canucks_logo.svg/1200px-Vancouver_Canucks_logo.svg.png',
+  'San Jose Sharks': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/37/SanJoseSharksLogo.svg/1200px-SanJoseSharksLogo.svg.png',
+  'Anaheim Ducks': 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png'
+};
 
 var teams = new XMLHttpRequest();
 teams.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
@@ -18,31 +38,8 @@ teams.addEventListener('load', function () {
     var teamName = records[i].team.name;
     var $li = document.createElement('li');
     var $img = document.createElement('img');
-    if (teamName === 'Vegas Golden Knights') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Vegas_Golden_Knights_logo.svg/800px-Vegas_Golden_Knights_logo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Los Angeles Kings') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/63/Los_Angeles_Kings_logo.svg/1200px-Los_Angeles_Kings_logo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Edmonton Oilers') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Logo_Edmonton_Oilers.svg/1200px-Logo_Edmonton_Oilers.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Seattle Kraken') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/4/48/Seattle_Kraken_official_logo.svg/1200px-Seattle_Kraken_official_logo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Calgary Flames') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Calgary_Flames_logo.svg/1200px-Calgary_Flames_logo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Vancouver Canucks') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Vancouver_Canucks_logo.svg/1200px-Vancouver_Canucks_logo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'San Jose Sharks') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/3/37/SanJoseSharksLogo.svg/1200px-SanJoseSharksLogo.svg.png');
-      $img.setAttribute('id', teamID);
-    } else if (teamName === 'Anaheim Ducks') {
-      $img.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png');
-      $img.setAttribute('id', teamID);
-    }
+    $img.setAttribute('src', teamImageSources[teamName]);
+    $img.setAttribute('id', teamID);
     $li.appendChild($img);
     $ol.appendChild($li);
   }
@@ -51,13 +48,16 @@ teams.send();
 
 var $imagesContainer = document.querySelector('.listed-images-container');
 $imagesContainer.addEventListener('click', function (event) {
-  if (event.target.tagName !== 'IMG') {
+  var teamElement = event.target;
+  if (event.target.tagName === 'LI') {
+    teamElement = event.target.firstChild;
+  } else if (event.target.tagName !== 'IMG') {
     return;
   }
   $favoritePlayersContainer.classList.add('hidden');
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.remove('hidden');
-  var teamID = event.target.id;
+  var teamID = teamElement.id;
   var selectedTeam = new XMLHttpRequest();
   selectedTeam.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
   selectedTeam.responseType = 'json';
@@ -109,11 +109,7 @@ $imagesContainer.addEventListener('click', function (event) {
 
 var $rankingsTab = document.querySelector('.rankings');
 $rankingsTab.addEventListener('click', function (event) {
-  $tableContentContainer.classList.add('hidden');
-  $rankingsContainer.classList.remove('hidden');
-  $playerProfileContainer.classList.add('hidden');
-  $favoritePlayersContainer.classList.add('hidden');
-  $advancedStatsContainer.classList.add('hidden');
+  viewRankings();
 });
 
 var $table = document.querySelector('#table');
@@ -131,23 +127,7 @@ $table.addEventListener('click', function (event) {
   playerInfo.addEventListener('load', function () {
     var $playerImg = document.querySelector('.player-image');
     var currentTeam = playerInfo.response.people[0].currentTeam.name;
-    if (currentTeam === 'Vegas Golden Knights') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Vegas_Golden_Knights_logo.svg/800px-Vegas_Golden_Knights_logo.svg.png');
-    } else if (currentTeam === 'Los Angeles Kings') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/63/Los_Angeles_Kings_logo.svg/1200px-Los_Angeles_Kings_logo.svg.png');
-    } else if (currentTeam === 'Edmonton Oilers') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Logo_Edmonton_Oilers.svg/1200px-Logo_Edmonton_Oilers.svg.png');
-    } else if (currentTeam === 'Seattle Kraken') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/4/48/Seattle_Kraken_official_logo.svg/1200px-Seattle_Kraken_official_logo.svg.png');
-    } else if (currentTeam === 'Vancouver Canucks') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Vancouver_Canucks_logo.svg/1200px-Vancouver_Canucks_logo.svg.png');
-    } else if (currentTeam === 'San Jose Sharks') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/3/37/SanJoseSharksLogo.svg/1200px-SanJoseSharksLogo.svg.png');
-    } else if (currentTeam === 'Anaheim Ducks') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png');
-    } else if (currentTeam === 'Calgary Flames') {
-      $playerImg.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/61/Calgary_Flames_logo.svg/1200px-Calgary_Flames_logo.svg.png');
-    }
+    $playerImg.setAttribute('src', teamImageSources[currentTeam]);
     $plusSign.setAttribute('id', playerInfo.response.people[0].id);
     var $name = document.querySelector('.name');
     $name.textContent = playerInfo.response.people[0].fullName;
@@ -196,22 +176,13 @@ $table.addEventListener('click', function (event) {
       var $advancedStatsTr = document.createElement('tr');
       var $advancedStatsTh = document.createElement('th');
       $advancedStatsTh.textContent = detailedStats.month;
-      var $advancedStatsTd = document.createElement('td');
-      $advancedStatsTd.textContent = detailedStats.stat.shortHandedGoals;
-      var $advancedStatsTd1 = document.createElement('td');
-      $advancedStatsTd1.textContent = detailedStats.stat.powerPlayGoals;
-      var $advancedStatsTd2 = document.createElement('td');
-      $advancedStatsTd2.textContent = detailedStats.stat.pim;
-      var $advancedStatsTd3 = document.createElement('td');
-      $advancedStatsTd3.textContent = detailedStats.stat.shots;
-      var $advancedStatsTd4 = document.createElement('td');
-      $advancedStatsTd4.textContent = detailedStats.stat.timeOnIcePerGame;
       $advancedStatsTr.appendChild($advancedStatsTh);
-      $advancedStatsTr.appendChild($advancedStatsTd1);
-      $advancedStatsTr.appendChild($advancedStatsTd);
-      $advancedStatsTr.appendChild($advancedStatsTd2);
-      $advancedStatsTr.appendChild($advancedStatsTd3);
-      $advancedStatsTr.appendChild($advancedStatsTd4);
+      var advancedStatsKeys = ['shortHandedGoals', 'powerPlayGoals', 'pim', 'shots', 'timeOnIcePerGame'];
+      for (var key of advancedStatsKeys) {
+        var $advancedStatsTd = document.createElement('td');
+        $advancedStatsTd.textContent = detailedStats.stat[key];
+        $advancedStatsTr.appendChild($advancedStatsTd);
+      }
       $advancedStatsTbody.appendChild($advancedStatsTr);
       $advancedStatsTable.appendChild($advancedStatsTbody);
     }
@@ -221,50 +192,38 @@ $table.addEventListener('click', function (event) {
   var rankings = new XMLHttpRequest();
   rankings.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=regularSeasonStatRankings&season=20222023');
   rankings.responseType = 'json';
+  var $loadingSign = document.querySelector('.lds-ring');
+  var $onPaceTable = document.querySelector('.where-he-stands-table');
+  $loadingSign.classList.remove('hidden');
+  $onPaceTable.classList.add('hidden');
   rankings.addEventListener('load', function (event) {
+    $loadingSign.classList.add('hidden');
+    $onPaceTable.classList.remove('hidden');
     var playerRankings = rankings.response.stats[0].splits[0].stat;
     var $oldTableBody = document.querySelector('.projectedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
-    var $onPaceTable = document.querySelector('.where-he-stands-table');
     var $onPaceTbody = document.createElement('tbody');
     $onPaceTbody.setAttribute('class', 'projectedStatsTbody');
     var $onPaceRow = document.createElement('tr');
-    var $td1 = document.createElement('td');
-    $td1.textContent = playerRankings.rankPoints;
-    var $td2 = document.createElement('td');
-    $td2.textContent = playerRankings.rankGoals;
-    var $td3 = document.createElement('td');
-    $td3.textContent = playerRankings.rankAssists;
-    var $td4 = document.createElement('td');
-    $td4.textContent = playerRankings.rankPlusMinus;
-    var $td5 = document.createElement('td');
-    $td5.textContent = playerRankings.rankPowerPlayGoals;
-    var $td6 = document.createElement('td');
-    $td6.textContent = playerRankings.rankShortHandedGoals;
-    var $td7 = document.createElement('td');
-    $td7.textContent = playerRankings.rankShotPct;
-    var $td8 = document.createElement('td');
-    $td8.textContent = playerRankings.rankGamesPlayed;
-
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
-    $onPaceRow.appendChild($td1);
-    $onPaceRow.appendChild($td2);
-    $onPaceRow.appendChild($td3);
-    $onPaceRow.appendChild($td4);
-    $onPaceRow.appendChild($td5);
-    $onPaceRow.appendChild($td6);
-    $onPaceRow.appendChild($td7);
-    $onPaceRow.appendChild($td8);
+
+    var rankingKeys = ['rankPoints', 'rankGoals', 'rankAssists',
+      'rankPlusMinus', 'rankPowerPlayGoals',
+      'rankShortHandedGoals', 'rankShotPct', 'rankGamesPlayed'];
+    for (var key of rankingKeys) {
+      var $td = document.createElement('td');
+      $td.textContent = playerRankings[key];
+      $onPaceRow.appendChild($td);
+    }
   });
   rankings.send();
 });
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
 $plusSignContainer.addEventListener('click', function (event) {
-  var id = event.target.getAttribute('id');
   if (event.target.tagName !== 'I') {
     return;
   }
@@ -298,24 +257,6 @@ $plusSignContainer.addEventListener('click', function (event) {
     $favoriteTr.appendChild($favoriteTd4);
   });
   favorites.send();
-
-  if ($favoriteTbody.hasChildNodes('tr')) {
-    var xhr8 = new XMLHttpRequest();
-    xhr8.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + id + '/stats?stats=homeAndAway&season=20222023');
-    xhr8.responseType = 'json';
-    xhr8.addEventListener('load', function () {
-      var ppg = 0;
-      var playerGoals = xhr8.response.stats[0].splits[0].stat.goals + xhr8.response.stats[0].splits[1].stat.goals;
-      var playerAssists = xhr8.response.stats[0].splits[0].stat.assists + xhr8.response.stats[0].splits[1].stat.assists;
-      var playerGames = xhr8.response.stats[0].splits[0].stat.games + xhr8.response.stats[0].splits[1].stat.games;
-      var playerPoints = playerGoals + playerAssists;
-      var $averagePpgText = document.querySelector('.avg-ppg');
-      var pointsPerGame = playerPoints / playerGames;
-      ppg += pointsPerGame;
-      $averagePpgText.textContent = ppg;
-    });
-    xhr8.send();
-  }
 });
 
 var closestTr = null;
@@ -344,4 +285,8 @@ $favoritesButton.addEventListener('click', function (event) {
   $tableContentContainer.classList.add('hidden');
   $playerProfileContainer.classList.add('hidden');
   $advancedStatsContainer.classList.add('hidden');
+});
+
+$bestInTheWest.addEventListener('click', function (_) {
+  viewRankings();
 });
