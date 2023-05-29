@@ -42,7 +42,7 @@ table {
 }
 
 .best-in-the-west {
-  font-size: 1.6rem;
+  font-size: 1.25rem;
 }
 
 .best-in-the-west:hover {
@@ -281,5 +281,9 @@ i:hover {
 
   table {
     width: 55%;
+  }
+
+  .best-in-the-west {
+    font-size: 1.5rem;
   }
 }
