@@ -73,7 +73,11 @@ $imagesContainer.addEventListener('click', function (event) {
       var $tr = document.createElement('tr');
       $tr.setAttribute('id', roster[i].person.id);
       var $td1 = document.createElement('td');
-      $td1.textContent = roster[i].jerseyNumber;
+      if (roster[i].jerseyNumber === undefined) {
+        $td1.textContent = 'N/A';
+      } else {
+        $td1.textContent = roster[i].jerseyNumber;
+      }
       var $td2 = document.createElement('td');
       $td2.textContent = roster[i].person.fullName;
       var $td3 = document.createElement('td');
@@ -154,9 +158,14 @@ $table.addEventListener('click', function (event) {
     var $gamesPlayed = document.querySelector('.gp');
     $gamesPlayed.textContent = playerStats.splits[0].stat.games + playerStats.splits[1].stat.games + ' ' + 'gp';
     var $goals = document.querySelector('.goals');
-    $goals.textContent = playerStats.splits[0].stat.goals + playerStats.splits[1].stat.goals + ' ' + 'G';
     var $assists = document.querySelector('.assists');
-    $assists.textContent = playerStats.splits[0].stat.assists + playerStats.splits[1].stat.assists + ' ' + 'A';
+    if (playerStats.splits[0].stat.goals === undefined) {
+      $goals.textContent = Math.round(1000 * (playerStats.splits[0].stat.savePercentage + playerStats.splits[1].stat.savePercentage) / 2) / 1000 + '%';
+      $assists.textContent = Math.round(1000 * (playerStats.splits[0].stat.goalAgainstAverage + playerStats.splits[1].stat.goalAgainstAverage) / 2) / 1000 + ' ' + 'gaa';
+    } else {
+      $goals.textContent = playerStats.splits[0].stat.goals + playerStats.splits[1].stat.goals + ' ' + 'G';
+      $assists.textContent = playerStats.splits[0].stat.assists + playerStats.splits[1].stat.assists + ' ' + 'A';
+    }
   });
   stats.send();
 
@@ -164,6 +173,11 @@ $table.addEventListener('click', function (event) {
   advancedStats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
   advancedStats.responseType = 'json';
   advancedStats.addEventListener('load', function (event) {
+    var $savePercentage = document.querySelector('.shg');
+    var $gaa = document.querySelector('.ppg');
+    var $wins = document.querySelector('.pim');
+    var $losses = document.querySelector('.shots');
+    var $toi = document.querySelector('.toi-game');
     var $oldTableBody = document.querySelector('.advancedStatsTbody');
     if ($oldTableBody) {
       $oldTableBody.remove();
@@ -177,14 +191,35 @@ $table.addEventListener('click', function (event) {
       var $advancedStatsTh = document.createElement('th');
       $advancedStatsTh.textContent = detailedStats.month;
       $advancedStatsTr.appendChild($advancedStatsTh);
-      var advancedStatsKeys = ['shortHandedGoals', 'powerPlayGoals', 'pim', 'shots', 'timeOnIcePerGame'];
-      for (var key of advancedStatsKeys) {
-        var $advancedStatsTd = document.createElement('td');
-        $advancedStatsTd.textContent = detailedStats.stat[key];
-        $advancedStatsTr.appendChild($advancedStatsTd);
+      if (detailedStats.stat.shots === undefined) {
+        $savePercentage.textContent = 'SV%';
+        $gaa.textContent = 'GAA';
+        $wins.textContent = 'Saves';
+        $losses.textContent = 'Shots';
+        $toi.textContent = 'S/O';
+        var advancedStatsKeys = ['evenStrengthSavePercentage', 'goalAgainstAverage', 'evenSaves', 'evenShots', 'shutouts'];
+        for (var key of advancedStatsKeys) {
+          var $advancedStatsTd = document.createElement('td');
+          $advancedStatsTd.textContent = Math.round(1000 * detailedStats.stat[key]) / 1000;
+          $advancedStatsTr.appendChild($advancedStatsTd);
+        }
+        $advancedStatsTbody.appendChild($advancedStatsTr);
+        $advancedStatsTable.appendChild($advancedStatsTbody);
+      } else {
+        $savePercentage.textContent = 'SHG';
+        $gaa.textContent = 'PPG';
+        $wins.textContent = 'PIM';
+        $losses.textContent = 'Shots';
+        $toi.textContent = 'TOI';
+        var advancedStatsKeys2 = ['shortHandedGoals', 'powerPlayGoals', 'pim', 'shots', 'timeOnIcePerGame'];
+        for (var key2 of advancedStatsKeys2) {
+          var $advancedStatsTd2 = document.createElement('td');
+          $advancedStatsTd2.textContent = detailedStats.stat[key2];
+          $advancedStatsTr.appendChild($advancedStatsTd2);
+        }
+        $advancedStatsTbody.appendChild($advancedStatsTr);
+        $advancedStatsTable.appendChild($advancedStatsTbody);
       }
-      $advancedStatsTbody.appendChild($advancedStatsTr);
-      $advancedStatsTable.appendChild($advancedStatsTbody);
     }
   });
   advancedStats.send();
@@ -197,6 +232,14 @@ $table.addEventListener('click', function (event) {
   $loadingSign.classList.remove('hidden');
   $onPaceTable.classList.add('hidden');
   rankings.addEventListener('load', function (event) {
+    var $points = document.querySelector('.points-rank');
+    var $goals = document.querySelector('.goals-rank');
+    var $assists = document.querySelector('.assists-rank');
+    var $plusMinus = document.querySelector('.plusMinus-rank');
+    var $ppg = document.querySelector('.ppg-rank');
+    var $shg = document.querySelector('.shg-rank');
+    var $shot = document.querySelector('.shot-rank');
+    var $gp = document.querySelector('.gp-rank');
     $loadingSign.classList.add('hidden');
     $onPaceTable.classList.remove('hidden');
     var playerRankings = rankings.response.stats[0].splits[0].stat;
@@ -209,14 +252,38 @@ $table.addEventListener('click', function (event) {
     var $onPaceRow = document.createElement('tr');
     $onPaceTable.appendChild($onPaceTbody);
     $onPaceTbody.appendChild($onPaceRow);
-
-    var rankingKeys = ['rankPoints', 'rankGoals', 'rankAssists',
-      'rankPlusMinus', 'rankPowerPlayGoals',
-      'rankShortHandedGoals', 'rankShotPct', 'rankGamesPlayed'];
-    for (var key of rankingKeys) {
-      var $td = document.createElement('td');
-      $td.textContent = playerRankings[key];
-      $onPaceRow.appendChild($td);
+    if (playerRankings.goalsAgainst !== undefined) {
+      $points.textContent = 'GP';
+      $goals.textContent = 'GA';
+      $assists.textContent = 'L';
+      $plusMinus.textContent = 'OT';
+      $ppg.textContent = 'SV%';
+      $shg.textContent = 'shots';
+      $shot.textContent = 'S.O';
+      $gp.textContent = 'W';
+      var rankingKeys = ['games', 'goalsAgainst', 'losses', 'ot', 'savePercentage', 'shotsAgainst', 'shutOuts', 'wins'];
+      for (var key of rankingKeys) {
+        var $td = document.createElement('td');
+        $td.textContent = playerRankings[key];
+        $onPaceRow.appendChild($td);
+      }
+    } else {
+      $points.textContent = 'P';
+      $goals.textContent = 'G';
+      $assists.textContent = 'A';
+      $plusMinus.textContent = '+/-';
+      $ppg.textContent = 'PPG';
+      $shg.textContent = 'SHG';
+      $shot.textContent = 'S.O';
+      $gp.textContent = 'GP';
+      var rankingKeys2 = ['rankPoints', 'rankGoals', 'rankAssists',
+        'rankPlusMinus', 'rankPowerPlayGoals',
+        'rankShortHandedGoals', 'rankShotPct', 'rankGamesPlayed'];
+      for (var key2 of rankingKeys2) {
+        var $td2 = document.createElement('td');
+        $td2.textContent = playerRankings[key2];
+        $onPaceRow.appendChild($td2);
+      }
     }
   });
   rankings.send();
