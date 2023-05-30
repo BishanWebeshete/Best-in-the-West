@@ -28,6 +28,7 @@ var teamImageSources = {
   'Anaheim Ducks': 'https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Anaheim_Ducks.svg/1200px-Anaheim_Ducks.svg.png'
 };
 
+// finds all teams/rankings in pacific division
 var teams = new XMLHttpRequest();
 teams.open('GET', 'https://statsapi.web.nhl.com/api/v1/standings?season=20222023');
 teams.responseType = 'json';
@@ -46,6 +47,7 @@ teams.addEventListener('load', function () {
 });
 teams.send();
 
+// creates team roster
 var $imagesContainer = document.querySelector('.listed-images-container');
 $imagesContainer.addEventListener('click', function (event) {
   var teamElement = event.target;
@@ -92,6 +94,7 @@ $imagesContainer.addEventListener('click', function (event) {
   });
   selectedTeam.send();
 
+  // lists general statistics on selected team
   var teamInfo = new XMLHttpRequest();
   teamInfo.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/stats');
   teamInfo.responseType = 'json';
@@ -128,6 +131,7 @@ $table.addEventListener('click', function (event) {
   var playerInfo = new XMLHttpRequest();
   playerInfo.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId);
   playerInfo.responseType = 'json';
+  // finds general information on selected player
   playerInfo.addEventListener('load', function () {
     var $playerImg = document.querySelector('.player-image');
     var currentTeam = playerInfo.response.people[0].currentTeam.name;
@@ -153,6 +157,7 @@ $table.addEventListener('click', function (event) {
   var stats = new XMLHttpRequest();
   stats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=homeAndAway&season=20222023');
   stats.responseType = 'json';
+  // finds general stats on selected player
   stats.addEventListener('load', function () {
     var playerStats = stats.response.stats[0];
     var $gamesPlayed = document.querySelector('.gp');
@@ -172,6 +177,7 @@ $table.addEventListener('click', function (event) {
   var advancedStats = new XMLHttpRequest();
   advancedStats.open('GET', 'https://statsapi.web.nhl.com/api/v1/people/' + $trId + '/stats?stats=byMonth');
   advancedStats.responseType = 'json';
+  // finds advanced stats on selected player
   advancedStats.addEventListener('load', function (event) {
     var $savePercentage = document.querySelector('.shg');
     var $gaa = document.querySelector('.ppg');
@@ -231,6 +237,7 @@ $table.addEventListener('click', function (event) {
   var $onPaceTable = document.querySelector('.where-he-stands-table');
   $loadingSign.classList.remove('hidden');
   $onPaceTable.classList.add('hidden');
+  // finds rankings on selected player
   rankings.addEventListener('load', function (event) {
     var $points = document.querySelector('.points-rank');
     var $goals = document.querySelector('.goals-rank');
@@ -290,6 +297,7 @@ $table.addEventListener('click', function (event) {
 });
 
 var $favoriteTbody = document.getElementById('favorite-tbody');
+// adds player to favorites list
 $plusSignContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'I') {
     return;
