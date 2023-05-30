@@ -22,8 +22,9 @@ Try the application live at: https://bishanwebeshete.github.io/Best-in-the-West/
 - User can view stats and other information on each player
 - User can add players to a favorites list
 
-
 ## Preview
+
+![Best-in-the-West](images/Kapture%202023-05-29%20at%2018.03.36.gif)
 
 ## Stretch Feature(s)
 
