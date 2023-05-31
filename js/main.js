@@ -311,6 +311,12 @@ $plusSignContainer.addEventListener('click', function (event) {
   favorites.responseType = 'json';
   favorites.addEventListener('load', function () {
     var favoriteInfo = favorites.response.people[0];
+    data.push({
+      id: $iconId,
+      number: favoriteInfo.primaryNumber,
+      name: favoriteInfo.fullName,
+      position: favoriteInfo.primaryPosition.abbreviation
+    });
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTr = document.createElement('tr');
     $favoriteTr.setAttribute('id', event.target.id);
@@ -365,3 +371,10 @@ $favoritesButton.addEventListener('click', function (event) {
 $bestInTheWest.addEventListener('click', function (_) {
   viewRankings();
 });
+
+// document.addEventListener('DOMContentLoaded', function (event) {
+//   var $favoritesTable = document.querySelector('#favorite-players-table');
+//   data.forEach(entry => {
+//     var $favoriteTr = document.createElement('tr');
+//   });
+// });
