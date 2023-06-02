@@ -64,11 +64,12 @@ $imagesContainer.addEventListener('click', function (event) {
   selectedTeam.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/roster?season=20222023');
   selectedTeam.responseType = 'json';
   selectedTeam.addEventListener('load', function () {
-    var $oldTableBody = document.querySelector('tbody');
+    var $oldTableBody = document.querySelector('#roster');
     if ($oldTableBody) {
       $oldTableBody.remove();
     }
     var $tbody = document.createElement('tbody');
+    $tbody.setAttribute('id', 'roster');
     var roster = selectedTeam.response.roster;
     for (let i = 0; i < roster.length; i++) {
       var $table = document.querySelector('#table');
@@ -296,7 +297,7 @@ $table.addEventListener('click', function (event) {
   rankings.send();
 });
 
-var $favoriteTbody = document.getElementById('favorite-tbody');
+var $favoriteTbody = document.createElement('tbody');
 // adds player to favorites list
 $plusSignContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'I') {
@@ -311,6 +312,12 @@ $plusSignContainer.addEventListener('click', function (event) {
   favorites.responseType = 'json';
   favorites.addEventListener('load', function () {
     var favoriteInfo = favorites.response.people[0];
+    data.push({
+      id: $iconId,
+      number: favoriteInfo.primaryNumber,
+      name: favoriteInfo.fullName,
+      position: favoriteInfo.primaryPosition.abbreviation
+    });
     var $favoritesTable = document.querySelector('#favorite-players-table');
     var $favoriteTr = document.createElement('tr');
     $favoriteTr.setAttribute('id', event.target.id);
@@ -351,6 +358,11 @@ $noButton.addEventListener('click', function (even) {
 });
 $yesButton.addEventListener('click', function (event) {
   closestTr.remove();
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].id === closestTr.id) {
+      data.splice(i, 1);
+    }
+  }
   $modal.classList.add('hidden');
 });
 
@@ -364,4 +376,28 @@ $favoritesButton.addEventListener('click', function (event) {
 
 $bestInTheWest.addEventListener('click', function (_) {
   viewRankings();
+});
+
+document.addEventListener('DOMContentLoaded', function (event) {
+  var $favoritesTable = document.querySelector('#favorite-players-table');
+  data.forEach(entry => {
+    var $favoriteTr = document.createElement('tr');
+    $favoriteTr.setAttribute('id', entry.id);
+    var $favoriteTd1 = document.createElement('td');
+    $favoriteTd1.textContent = entry.number;
+    var $favoriteTd2 = document.createElement('td');
+    $favoriteTd2.textContent = entry.name;
+    var $favoriteTd3 = document.createElement('td');
+    $favoriteTd3.textContent = entry.position;
+    var $favoriteTd4 = document.createElement('td');
+    var $trashIcon = document.createElement('i');
+    $trashIcon.className = 'fa-solid fa-trash';
+    $favoriteTbody.appendChild($favoriteTr);
+    $favoriteTr.appendChild($favoriteTd1);
+    $favoriteTr.appendChild($favoriteTd2);
+    $favoriteTr.appendChild($favoriteTd3);
+    $favoriteTd4.appendChild($trashIcon);
+    $favoriteTr.appendChild($favoriteTd4);
+  });
+  $favoritesTable.appendChild($favoriteTbody);
 });
