@@ -99,7 +99,7 @@ $imagesContainer.addEventListener('click', function (event) {
   var teamInfo = new XMLHttpRequest();
   teamInfo.open('GET', 'https://statsapi.web.nhl.com/api/v1/teams/' + teamID + '/stats');
   teamInfo.responseType = 'json';
-  teamInfo.addEventListener('load', function (event) {
+  teamInfo.addEventListener('load', function () {
     var details = teamInfo.response.stats[0].splits[0];
     var $rosterName = document.querySelector('.official-roster');
     $rosterName.textContent = details.team.name + ' ' + 'Official' + ' ' + 'Roster';
@@ -116,7 +116,7 @@ $imagesContainer.addEventListener('click', function (event) {
 });
 
 var $rankingsTab = document.querySelector('.rankings');
-$rankingsTab.addEventListener('click', function (event) {
+$rankingsTab.addEventListener('click', function () {
   viewRankings();
 });
 
@@ -239,7 +239,7 @@ $table.addEventListener('click', function (event) {
   $loadingSign.classList.remove('hidden');
   $onPaceTable.classList.add('hidden');
   // finds rankings on selected player
-  rankings.addEventListener('load', function (event) {
+  rankings.addEventListener('load', function () {
     var $points = document.querySelector('.points-rank');
     var $goals = document.querySelector('.goals-rank');
     var $assists = document.querySelector('.assists-rank');
@@ -353,10 +353,10 @@ $favoriteTbody.addEventListener('click', function (event) {
   $modal.classList.remove('hidden');
 });
 
-$noButton.addEventListener('click', function (even) {
+$noButton.addEventListener('click', function () {
   $modal.classList.add('hidden');
 });
-$yesButton.addEventListener('click', function (event) {
+$yesButton.addEventListener('click', function () {
   closestTr.remove();
   for (let i = 0; i < data.length; i++) {
     if (data[i].id === closestTr.id) {
@@ -366,7 +366,7 @@ $yesButton.addEventListener('click', function (event) {
   $modal.classList.add('hidden');
 });
 
-$favoritesButton.addEventListener('click', function (event) {
+$favoritesButton.addEventListener('click', function () {
   $favoritePlayersContainer.classList.remove('hidden');
   $rankingsContainer.classList.add('hidden');
   $tableContentContainer.classList.add('hidden');
@@ -374,11 +374,11 @@ $favoritesButton.addEventListener('click', function (event) {
   $advancedStatsContainer.classList.add('hidden');
 });
 
-$bestInTheWest.addEventListener('click', function (_) {
+$bestInTheWest.addEventListener('click', function () {
   viewRankings();
 });
 
-document.addEventListener('DOMContentLoaded', function (event) {
+document.addEventListener('DOMContentLoaded', function () {
   var $favoritesTable = document.querySelector('#favorite-players-table');
   data.forEach(entry => {
     var $favoriteTr = document.createElement('tr');

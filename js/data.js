@@ -8,7 +8,12 @@ if (previousData !== null) {
   data = JSON.parse(previousData);
 }
 
-window.addEventListener('beforeunload', function (event) {
+window.addEventListener('beforeunload', function (_) {
+  var stringifiedData = JSON.stringify(data);
+  localStorage.setItem('javascript-local-storage', stringifiedData);
+});
+
+window.addEventListener('pagehide', function (_) {
   var stringifiedData = JSON.stringify(data);
   localStorage.setItem('javascript-local-storage', stringifiedData);
 });
