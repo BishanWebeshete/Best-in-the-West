@@ -8,6 +8,7 @@ var $favoritePlayersContainer = document.querySelector('.favorite-players-conten
 var $favoritesButton = document.querySelector('.favorites');
 var $advancedStatsContainer = document.querySelector('.advanced-stats-container');
 var $bestInTheWest = document.querySelector('.best-in-the-west');
+var $favoriteTbody = document.querySelector('.favoriteTbody');
 
 function viewRankings() {
   $tableContentContainer.classList.add('hidden');
@@ -15,6 +16,26 @@ function viewRankings() {
   $playerProfileContainer.classList.add('hidden');
   $favoritePlayersContainer.classList.add('hidden');
   $advancedStatsContainer.classList.add('hidden');
+}
+
+function addFavoritePlayer(player) {
+  var $favoriteTr = document.createElement('tr');
+  $favoriteTr.setAttribute('id', player.id);
+  var $favoriteTd1 = document.createElement('td');
+  $favoriteTd1.textContent = player.number;
+  var $favoriteTd2 = document.createElement('td');
+  $favoriteTd2.textContent = player.name;
+  var $favoriteTd3 = document.createElement('td');
+  $favoriteTd3.textContent = player.position;
+  var $favoriteTd4 = document.createElement('td');
+  var $trashIcon = document.createElement('i');
+  $trashIcon.className = 'fa-solid fa-trash';
+  $favoriteTbody.appendChild($favoriteTr);
+  $favoriteTr.appendChild($favoriteTd1);
+  $favoriteTr.appendChild($favoriteTd2);
+  $favoriteTr.appendChild($favoriteTd3);
+  $favoriteTd4.appendChild($trashIcon);
+  $favoriteTr.appendChild($favoriteTd4);
 }
 
 var teamImageSources = {
@@ -91,7 +112,6 @@ $imagesContainer.addEventListener('click', function (event) {
       $tbody.appendChild($tr);
       $table.appendChild($tbody);
     }
-
   });
   selectedTeam.send();
 
@@ -134,24 +154,25 @@ $table.addEventListener('click', function (event) {
   playerInfo.responseType = 'json';
   // finds general information on selected player
   playerInfo.addEventListener('load', function () {
+    var playerDetails = playerInfo.response.people[0];
     var $playerImg = document.querySelector('.player-image');
-    var currentTeam = playerInfo.response.people[0].currentTeam.name;
+    var currentTeam = playerDetails.currentTeam.name;
     $playerImg.setAttribute('src', teamImageSources[currentTeam]);
-    $plusSign.setAttribute('id', playerInfo.response.people[0].id);
+    $plusSign.setAttribute('id', playerDetails.id);
     var $name = document.querySelector('.name');
-    $name.textContent = playerInfo.response.people[0].fullName;
+    $name.textContent = playerDetails.fullName;
     var $position = document.querySelector('.position');
-    $position.textContent = playerInfo.response.people[0].primaryPosition.abbreviation;
+    $position.textContent = playerDetails.primaryPosition.abbreviation;
     var $height = document.querySelector('.height');
-    $height.textContent = playerInfo.response.people[0].height;
+    $height.textContent = playerDetails.height;
     var $weight = document.querySelector('.weight');
-    $weight.textContent = playerInfo.response.people[0].weight + ' ' + 'lbs';
+    $weight.textContent = playerDetails.weight + ' ' + 'lbs';
     var $age = document.querySelector('.age');
-    $age.textContent = playerInfo.response.people[0].currentAge + ' ' + 'yrs';
+    $age.textContent = playerDetails.currentAge + ' ' + 'yrs';
     var $birthDay = document.querySelector('.birth-date');
-    $birthDay.textContent = playerInfo.response.people[0].birthDate;
+    $birthDay.textContent = playerDetails.birthDate;
     var $birthPlace = document.querySelector('.birth-place');
-    $birthPlace.textContent = playerInfo.response.people[0].birthCity + ',' + ' ' + playerInfo.response.people[0].birthCountry;
+    $birthPlace.textContent = playerDetails.birthCity + ',' + ' ' + playerDetails.birthCountry;
   });
   playerInfo.send();
 
@@ -160,17 +181,18 @@ $table.addEventListener('click', function (event) {
   stats.responseType = 'json';
   // finds general stats on selected player
   stats.addEventListener('load', function () {
-    var playerStats = stats.response.stats[0];
+    var playerStatsHome = stats.response.stats[0].splits[0].stat;
+    var playerStatsAway = stats.response.stats[0].splits[1].stat;
     var $gamesPlayed = document.querySelector('.gp');
-    $gamesPlayed.textContent = playerStats.splits[0].stat.games + playerStats.splits[1].stat.games + ' ' + 'gp';
+    $gamesPlayed.textContent = playerStatsHome.games + playerStatsAway.games + ' ' + 'gp';
     var $goals = document.querySelector('.goals');
     var $assists = document.querySelector('.assists');
-    if (playerStats.splits[0].stat.goals === undefined) {
-      $goals.textContent = Math.round(1000 * (playerStats.splits[0].stat.savePercentage + playerStats.splits[1].stat.savePercentage) / 2) / 1000 + '%';
-      $assists.textContent = Math.round(1000 * (playerStats.splits[0].stat.goalAgainstAverage + playerStats.splits[1].stat.goalAgainstAverage) / 2) / 1000 + ' ' + 'gaa';
+    if (playerStatsHome.goals === undefined) {
+      $goals.textContent = Math.round(1000 * (playerStatsHome.savePercentage + playerStatsAway.savePercentage) / 2) / 1000 + '%';
+      $assists.textContent = Math.round(1000 * (playerStatsHome.goalAgainstAverage + playerStatsAway.goalAgainstAverage) / 2) / 1000 + ' ' + 'gaa';
     } else {
-      $goals.textContent = playerStats.splits[0].stat.goals + playerStats.splits[1].stat.goals + ' ' + 'G';
-      $assists.textContent = playerStats.splits[0].stat.assists + playerStats.splits[1].stat.assists + ' ' + 'A';
+      $goals.textContent = playerStatsHome.goals + playerStatsAway.goals + ' ' + 'G';
+      $assists.textContent = playerStatsHome.assists + playerStatsAway.assists + ' ' + 'A';
     }
   });
   stats.send();
@@ -297,7 +319,6 @@ $table.addEventListener('click', function (event) {
   rankings.send();
 });
 
-var $favoriteTbody = document.createElement('tbody');
 // adds player to favorites list
 $plusSignContainer.addEventListener('click', function (event) {
   if (event.target.tagName !== 'I') {
@@ -312,31 +333,14 @@ $plusSignContainer.addEventListener('click', function (event) {
   favorites.responseType = 'json';
   favorites.addEventListener('load', function () {
     var favoriteInfo = favorites.response.people[0];
-    data.push({
+    var newFavorite = {
       id: $iconId,
       number: favoriteInfo.primaryNumber,
       name: favoriteInfo.fullName,
       position: favoriteInfo.primaryPosition.abbreviation
-    });
-    var $favoritesTable = document.querySelector('#favorite-players-table');
-    var $favoriteTr = document.createElement('tr');
-    $favoriteTr.setAttribute('id', event.target.id);
-    var $favoriteTd1 = document.createElement('td');
-    $favoriteTd1.textContent = favoriteInfo.primaryNumber;
-    var $favoriteTd2 = document.createElement('td');
-    $favoriteTd2.textContent = favoriteInfo.fullName;
-    var $favoriteTd3 = document.createElement('td');
-    $favoriteTd3.textContent = favoriteInfo.primaryPosition.abbreviation;
-    var $favoriteTd4 = document.createElement('td');
-    var $trashIcon = document.createElement('i');
-    $trashIcon.className = 'fa-solid fa-trash';
-    $favoritesTable.appendChild($favoriteTbody);
-    $favoriteTbody.appendChild($favoriteTr);
-    $favoriteTr.appendChild($favoriteTd1);
-    $favoriteTr.appendChild($favoriteTd2);
-    $favoriteTr.appendChild($favoriteTd3);
-    $favoriteTd4.appendChild($trashIcon);
-    $favoriteTr.appendChild($favoriteTd4);
+    };
+    data.push(newFavorite);
+    addFavoritePlayer(newFavorite);
   });
   favorites.send();
 });
@@ -379,25 +383,7 @@ $bestInTheWest.addEventListener('click', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  var $favoritesTable = document.querySelector('#favorite-players-table');
   data.forEach(entry => {
-    var $favoriteTr = document.createElement('tr');
-    $favoriteTr.setAttribute('id', entry.id);
-    var $favoriteTd1 = document.createElement('td');
-    $favoriteTd1.textContent = entry.number;
-    var $favoriteTd2 = document.createElement('td');
-    $favoriteTd2.textContent = entry.name;
-    var $favoriteTd3 = document.createElement('td');
-    $favoriteTd3.textContent = entry.position;
-    var $favoriteTd4 = document.createElement('td');
-    var $trashIcon = document.createElement('i');
-    $trashIcon.className = 'fa-solid fa-trash';
-    $favoriteTbody.appendChild($favoriteTr);
-    $favoriteTr.appendChild($favoriteTd1);
-    $favoriteTr.appendChild($favoriteTd2);
-    $favoriteTr.appendChild($favoriteTd3);
-    $favoriteTd4.appendChild($trashIcon);
-    $favoriteTr.appendChild($favoriteTd4);
+    addFavoritePlayer(entry);
   });
-  $favoritesTable.appendChild($favoriteTbody);
 });
